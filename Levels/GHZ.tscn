@@ -1,0 +1,2043 @@
+[gd_scene load_steps=50 format=2]
+
+[ext_resource path="res://Gameplay Scripts/character_animator.gd" type="Script" id=1]
+[ext_resource path="res://Gameplay Scripts/States/on_ground.gd" type="Script" id=2]
+[ext_resource path="res://Gameplay Scripts/state_machine.gd" type="Script" id=3]
+[ext_resource path="res://Gameplay Scripts/player_physics.gd" type="Script" id=4]
+[ext_resource path="res://Gameplay Scripts/player_camera.gd" type="Script" id=5]
+[ext_resource path="res://Test Zone/loop_part_red.res" type="PackedScene" id=6]
+[ext_resource path="res://General/MaskSetterBlue.res" type="PackedScene" id=7]
+[ext_resource path="res://General/MaskSetterInvert.res" type="PackedScene" id=8]
+[ext_resource path="res://Sprites/spinDash.png" type="Texture" id=9]
+[ext_resource path="res://General/MaskSetterRed.res" type="PackedScene" id=10]
+[ext_resource path="res://Audio/sfx/spinDashRelease.wav" type="AudioStream" id=11]
+[ext_resource path="res://Gameplay Scripts/audio_player.gd" type="Script" id=12]
+[ext_resource path="res://Gameplay Scripts/States/on_air.gd" type="Script" id=13]
+[ext_resource path="res://Audio/sfx/spinDashCharge.wav" type="AudioStream" id=14]
+[ext_resource path="res://Audio/sfx/jump.wav" type="AudioStream" id=15]
+[ext_resource path="res://Gameplay Scripts/States/spin_dash.gd" type="Script" id=16]
+[ext_resource path="res://Audio/sfx/instaShield.wav" type="AudioStream" id=17]
+[ext_resource path="res://Sprites/prototype_tile.png" type="Texture" id=18]
+[ext_resource path="res://Gameplay Scripts/States/super_peel_out.gd" type="Script" id=19]
+[ext_resource path="res://Gameplay Scripts/character_vfx.gd" type="Script" id=20]
+[ext_resource path="res://Audio/sfx/peelOutRelease.wav" type="AudioStream" id=21]
+[ext_resource path="res://Audio/sfx/peelOutCharge.wav" type="AudioStream" id=22]
+[ext_resource path="res://Audio/sfx/spin.wav" type="AudioStream" id=23]
+[ext_resource path="res://Sprites/Sonic.png" type="Texture" id=24]
+[ext_resource path="res://Sprites/instaShield.png" type="Texture" id=25]
+[ext_resource path="res://Test Zone/loop_part_blue.res" type="PackedScene" id=26]
+[ext_resource path="res://Test Zone/loop_part.res" type="PackedScene" id=27]
+[ext_resource path="res://Test Zone/one way block.tscn" type="PackedScene" id=28]
+[ext_resource path="res://Test Zone/block.tscn" type="PackedScene" id=29]
+[ext_resource path="res://Test Zone/fall block.tscn" type="PackedScene" id=30]
+[ext_resource path="res://Ring.tscn" type="PackedScene" id=31]
+[ext_resource path="res://Audio/sfx/brake.wav" type="AudioStream" id=32]
+
+[sub_resource type="Animation" id=1]
+resource_name = "Braking"
+length = 0.52
+step = 0.13
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.133686, 0.26, 0.39 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 38, 39, 40, 41 ]
+}
+
+[sub_resource type="Animation" id=2]
+length = 3.5
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 2.7, 3, 3.1 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 0, 5, 6 ]
+}
+
+[sub_resource type="Animation" id=3]
+length = 10.3
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.3, 0.6, 0.9, 1.2, 1.48712, 1.8, 2.08852, 2.4, 3.1, 3.4, 3.7, 4, 4.3, 4.6, 4.88712, 5.2, 5.48852, 5.8, 6.5, 6.8, 7.1, 7.4, 7.7, 8, 8.28712, 8.6, 8.88852, 9.2, 9.9, 10.2 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 7, 8, 7, 8, 7, 8, 7, 8, 9, 9, 7, 8, 7, 8, 7, 8, 7, 8, 9, 9, 7, 8, 7, 8, 7, 8, 7, 8, 9, 9, 10 ]
+}
+
+[sub_resource type="Animation" id=4]
+length = 0.6
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.3 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ 11, 12 ]
+}
+
+[sub_resource type="Animation" id=5]
+resource_name = "LookDown"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ 3, 4 ]
+}
+
+[sub_resource type="Animation" id=6]
+resource_name = "LookUp"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ 1, 2 ]
+}
+
+[sub_resource type="Animation" id=7]
+resource_name = "PeelOut"
+length = 0.8
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.2, 0.4, 0.6 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 60, 61, 62, 63 ]
+}
+
+[sub_resource type="Animation" id=8]
+resource_name = "Pushing"
+length = 2.1
+loop = true
+step = 0.53
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.53, 1.06, 1.59 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 52, 53, 54, 55 ]
+}
+
+[sub_resource type="Animation" id=9]
+length = 0.7
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 26, 30, 27, 30, 28, 30, 29, 30 ]
+}
+
+[sub_resource type="Animation" id=10]
+length = 0.8
+loop = true
+step = 0.2
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.2, 0.4, 0.6 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 22, 23, 24, 25 ]
+}
+
+[sub_resource type="Animation" id=11]
+length = 0.24
+loop = true
+step = 0.04
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.04, 0.08, 0.12, 0.16, 0.2 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 31, 32, 33, 34, 35, 36 ]
+}
+
+[sub_resource type="Animation" id=12]
+length = 1.6
+loop = true
+step = 0.2
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.2, 0.4, 0.6, 0.8, 1, 1.2, 1.4 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 17, 18, 19, 20, 21, 14, 15, 16 ]
+}
+
+[sub_resource type="Animation" id=13]
+length = 0.28
+loop = true
+step = 0.04
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.04, 0.08, 0.12, 0.16, 0.2, 0.24 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2, 3, 4, 5, 6 ]
+}
+
+[sub_resource type="Animation" id=14]
+resource_name = "InstaShield"
+length = 0.12
+step = 0.02
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.02, 0.04, 0.06, 0.08, 0.1 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2, 3, 4, 5 ]
+}
+
+[sub_resource type="CapsuleShape2D" id=15]
+height = 6.05999
+
+[sub_resource type="CircleShape2D" id=16]
+radius = 9.0
+
+[sub_resource type="RayShape2D" id=17]
+length = 19.0
+
+[node name="GHZ" type="Node2D"]
+
+[node name="PlayerCamera" type="Node2D" parent="."]
+position = Vector2( 212, 740 )
+script = ExtResource( 5 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="CameraScroll" type="Node2D" parent="PlayerCamera"]
+
+[node name="Camera2D" type="Camera2D" parent="PlayerCamera/CameraScroll"]
+current = true
+zoom = Vector2( 0.5, 0.5 )
+limit_left = 0
+limit_top = 0
+drag_margin_left = 0.08
+drag_margin_top = 0.4
+drag_margin_right = 0.0
+drag_margin_bottom = 0.15
+editor_draw_limits = true
+
+[node name="Player" type="KinematicBody2D" parent="."]
+position = Vector2( 31, 946 )
+z_index = 1
+collision/safe_margin = 0.1
+script = ExtResource( 4 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="StateMachine" type="Node" parent="Player"]
+script = ExtResource( 3 )
+
+[node name="OnGround" type="Node" parent="Player/StateMachine"]
+script = ExtResource( 2 )
+
+[node name="OnAir" type="Node" parent="Player/StateMachine"]
+script = ExtResource( 13 )
+
+[node name="SpinDash" type="Node" parent="Player/StateMachine"]
+script = ExtResource( 16 )
+
+[node name="SuperPeelOut" type="Node" parent="Player/StateMachine"]
+script = ExtResource( 19 )
+
+[node name="Characters" type="Node2D" parent="Player"]
+position = Vector2( 0, -4 )
+
+[node name="Sonic" type="Sprite" parent="Player/Characters"]
+texture = ExtResource( 24 )
+hframes = 17
+vframes = 17
+region_rect = Rect2( 0, 0, 48, 48 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Player/Characters/Sonic"]
+anims/Braking = SubResource( 1 )
+anims/Idle1 = SubResource( 2 )
+anims/Idle2 = SubResource( 3 )
+anims/Idle3 = SubResource( 4 )
+anims/LookDown = SubResource( 5 )
+anims/LookUp = SubResource( 6 )
+anims/PeelOut = SubResource( 7 )
+anims/Pushing = SubResource( 8 )
+anims/Rolling = SubResource( 9 )
+anims/Running = SubResource( 10 )
+anims/SpinDashCharge = SubResource( 11 )
+anims/Walking = SubResource( 12 )
+script = ExtResource( 1 )
+
+[node name="VFX" type="Node2D" parent="Player/Characters"]
+script = ExtResource( 20 )
+
+[node name="ChargeDust" type="Sprite" parent="Player/Characters/VFX"]
+visible = false
+position = Vector2( -19, 13 )
+texture = ExtResource( 9 )
+hframes = 7
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Player/Characters/VFX/ChargeDust"]
+anims/ChargeDust = SubResource( 13 )
+
+[node name="InstaShield" type="Sprite" parent="Player/Characters/VFX"]
+visible = false
+position = Vector2( 0, 9 )
+texture = ExtResource( 25 )
+hframes = 6
+frame = 5
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Player/Characters/VFX/InstaShield"]
+anims/InstaShield = SubResource( 14 )
+
+[node name="AudioPlayer" type="Node2D" parent="Player"]
+script = ExtResource( 12 )
+
+[node name="jump" type="AudioStreamPlayer" parent="Player/AudioPlayer"]
+stream = ExtResource( 15 )
+volume_db = -15.0
+
+[node name="brake" type="AudioStreamPlayer" parent="Player/AudioPlayer"]
+stream = ExtResource( 32 )
+volume_db = -20.0
+
+[node name="spin" type="AudioStreamPlayer" parent="Player/AudioPlayer"]
+stream = ExtResource( 23 )
+volume_db = -10.0
+
+[node name="SpinDashCharge" type="AudioStreamPlayer" parent="Player/AudioPlayer"]
+stream = ExtResource( 14 )
+volume_db = -10.0
+
+[node name="SpinDashRelease" type="AudioStreamPlayer" parent="Player/AudioPlayer"]
+stream = ExtResource( 11 )
+volume_db = -10.0
+
+[node name="PeelOutCharge" type="AudioStreamPlayer" parent="Player/AudioPlayer"]
+stream = ExtResource( 22 )
+volume_db = -10.0
+
+[node name="PeelOutRelease" type="AudioStreamPlayer" parent="Player/AudioPlayer"]
+stream = ExtResource( 21 )
+volume_db = -10.0
+
+[node name="InstaShield" type="AudioStreamPlayer" parent="Player/AudioPlayer"]
+stream = ExtResource( 17 )
+volume_db = -25.0
+
+[node name="HighCollider" type="CollisionShape2D" parent="Player"]
+position = Vector2( -1, -2.99997 )
+shape = SubResource( 15 )
+
+[node name="LowCollider" type="CollisionShape2D" parent="Player"]
+position = Vector2( 0, 10 )
+shape = SubResource( 16 )
+
+[node name="RayShape" type="CollisionShape2D" parent="Player"]
+shape = SubResource( 17 )
+
+[node name="LeftGroundSensor" type="RayCast2D" parent="Player"]
+position = Vector2( -9, 7 )
+enabled = true
+cast_to = Vector2( 0, 36 )
+
+[node name="RightGroundSensor" type="RayCast2D" parent="Player"]
+position = Vector2( 7, 7 )
+enabled = true
+cast_to = Vector2( 0, 36 )
+
+[node name="RightWallSensor" type="RayCast2D" parent="Player"]
+enabled = true
+cast_to = Vector2( 11, 0 )
+
+[node name="LeftWallSensor" type="RayCast2D" parent="Player"]
+enabled = true
+cast_to = Vector2( -11, 0 )
+
+[node name="Level" type="Node2D" parent="."]
+position = Vector2( 0, 620 )
+
+[node name="FullLoop" type="Node2D" parent="Level"]
+position = Vector2( 5506, 13 )
+scale = Vector2( 0.6, 0.6 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="loop_part" parent="Level/FullLoop" instance=ExtResource( 27 )]
+position = Vector2( -82, -84 )
+rotation = 1.5708
+z_index = 2
+
+[node name="loop_part2" parent="Level/FullLoop" instance=ExtResource( 27 )]
+position = Vector2( 85, -82 )
+rotation = 3.14159
+z_index = 2
+
+[node name="loop_part_blue" parent="Level/FullLoop" instance=ExtResource( 26 )]
+position = Vector2( -84, 83 )
+
+[node name="loop_part_red" parent="Level/FullLoop" instance=ExtResource( 6 )]
+position = Vector2( 83, 85 )
+z_index = 2
+
+[node name="MaskSetterRed" parent="Level/FullLoop" instance=ExtResource( 10 )]
+position = Vector2( -170, 94 )
+
+[node name="MaskSetterRed2" parent="Level/FullLoop" instance=ExtResource( 10 )]
+position = Vector2( -170, 31 )
+
+[node name="MaskSetterBlue" parent="Level/FullLoop" instance=ExtResource( 7 )]
+position = Vector2( 174, 95 )
+
+[node name="MaskSetterBlue2" parent="Level/FullLoop" instance=ExtResource( 7 )]
+position = Vector2( 174, 32 )
+
+[node name="MaskSetterInvert" parent="Level/FullLoop" instance=ExtResource( 8 )]
+position = Vector2( 0, -95 )
+
+[node name="loop_part3" parent="Level" instance=ExtResource( 27 )]
+position = Vector2( -1753, 182 )
+z_index = 2
+
+[node name="loop_part4" parent="Level" instance=ExtResource( 27 )]
+position = Vector2( -1879, 15 )
+rotation = -3.14159
+z_index = 2
+
+[node name="loop_part6" parent="Level" instance=ExtResource( 27 )]
+position = Vector2( -1077, 478 )
+z_index = 2
+
+[node name="loop_part9" parent="Level" instance=ExtResource( 27 )]
+position = Vector2( -527, 501 )
+z_index = 2
+
+[node name="loop_part8" parent="Level" instance=ExtResource( 27 )]
+position = Vector2( -781, 314 )
+rotation = 1.5708
+z_index = 2
+
+[node name="loop_part5" parent="Level" instance=ExtResource( 27 )]
+position = Vector2( -1203, 311 )
+rotation = -3.14159
+z_index = 2
+
+[node name="loop_part10" parent="Level" instance=ExtResource( 27 )]
+position = Vector2( 1877, 328 )
+rotation = -1.46084
+scale = Vector2( 0.5, 0.5 )
+z_index = 2
+
+[node name="loop_part12" parent="Level" instance=ExtResource( 27 )]
+position = Vector2( 6242, 247 )
+scale = Vector2( 0.8, 0.8 )
+z_index = 2
+
+[node name="loop_part13" parent="Level" instance=ExtResource( 27 )]
+position = Vector2( 6254, 33 )
+rotation = 3.14159
+scale = Vector2( 0.8, 0.8 )
+z_index = 2
+
+[node name="loop_part14" parent="Level" instance=ExtResource( 27 )]
+position = Vector2( 6223, 59 )
+rotation = 3.14159
+scale = Vector2( 0.4, 0.4 )
+z_index = 2
+
+[node name="loop_part15" parent="Level" instance=ExtResource( 27 )]
+position = Vector2( 6222, 118 )
+rotation = -1.5708
+scale = Vector2( 0.4, 0.4 )
+z_index = 2
+
+[node name="loop_part16" parent="Level" instance=ExtResource( 27 )]
+position = Vector2( 6209, 170 )
+rotation = 1.028
+scale = Vector2( 0.4, 0.4 )
+z_index = 2
+
+[node name="loop_part19" parent="Level" instance=ExtResource( 27 )]
+position = Vector2( 6288, 231 )
+rotation = -0.392699
+scale = Vector2( 0.4, 0.4 )
+z_index = 2
+
+[node name="loop_part17" parent="Level" instance=ExtResource( 27 )]
+position = Vector2( 6260, 175 )
+rotation = 1.028
+scale = Vector2( 0.4, 0.4 )
+z_index = 2
+
+[node name="loop_part18" parent="Level" instance=ExtResource( 27 )]
+position = Vector2( 6282, 107 )
+rotation = -2.03156
+scale = Vector2( 0.4, 0.4 )
+z_index = 2
+
+[node name="block" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( -1994, -38 )
+z_index = 2
+
+[node name="block8" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( -666, 262 )
+z_index = 2
+
+[node name="block11" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( -602, 324 )
+z_index = 2
+
+[node name="block14" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( -283, 327 )
+z_index = 2
+
+[node name="block9" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( -602, 262 )
+z_index = 2
+
+[node name="block15" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 285, 379 )
+scale = Vector2( 19.88, 1 )
+z_index = 2
+
+[node name="block30" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 797, 379 )
+z_index = 2
+
+[node name="block32" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 1043, 313 )
+z_index = 2
+
+[node name="block33" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 1058, 313 )
+z_index = 2
+
+[node name="block37" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 1314, 314 )
+z_index = 2
+
+[node name="block38" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 1376, 314 )
+z_index = 2
+
+[node name="block44" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 1820, 375 )
+z_index = 2
+
+[node name="block47" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 1934, 310 )
+z_index = 2
+
+[node name="block48" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 1997, 310 )
+z_index = 2
+
+[node name="block49" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 2059, 310 )
+z_index = 2
+
+[node name="block50" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 2119, 310 )
+z_index = 2
+
+[node name="block51" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 2150, 310 )
+z_index = 2
+
+[node name="block52" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 2208, 282 )
+z_index = 2
+
+[node name="block53" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 2270, 249 )
+z_index = 2
+
+[node name="block54" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 2334, 249 )
+z_index = 2
+
+[node name="block55" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 2398, 200 )
+z_index = 2
+
+[node name="block61" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 2848, 201 )
+z_index = 2
+
+[node name="block62" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 2912, 201 )
+z_index = 2
+
+[node name="block63" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 2975, 201 )
+z_index = 2
+
+[node name="block64" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 3024, 201 )
+z_index = 2
+
+[node name="block65" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 3044, 201 )
+z_index = 2
+
+[node name="block66" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 3104, 140 )
+z_index = 2
+
+[node name="block67" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 3104, 121 )
+z_index = 2
+
+[node name="block68" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 3166, 121 )
+z_index = 2
+
+[node name="block69" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 3230, 121 )
+z_index = 2
+
+[node name="block70" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 3294, 121 )
+z_index = 2
+
+[node name="block91" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 3891, 371 )
+z_index = 2
+
+[node name="block92" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 3953, 371 )
+z_index = 2
+
+[node name="block93" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 4017, 371 )
+z_index = 2
+
+[node name="block94" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 4081, 371 )
+z_index = 2
+
+[node name="block71" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 3357, 312 )
+z_index = 2
+
+[node name="block82" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 3421, 312 )
+z_index = 2
+
+[node name="block83" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 3485, 312 )
+z_index = 2
+
+[node name="block84" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 3548, 312 )
+z_index = 2
+
+[node name="block85" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 3612, 311 )
+z_index = 2
+
+[node name="block56" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 2461, 200 )
+z_index = 2
+
+[node name="block57" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 2525, 200 )
+z_index = 2
+
+[node name="block58" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 2559, 200 )
+z_index = 2
+
+[node name="block59" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 2592, 200 )
+z_index = 2
+
+[node name="block39" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 1440, 314 )
+z_index = 2
+
+[node name="block40" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 1503, 314 )
+z_index = 2
+
+[node name="block41" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 1565, 314 )
+z_index = 2
+
+[node name="block36" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 1185, 292 )
+scale = Vector2( 3.06107, 0.280012 )
+z_index = 2
+
+[node name="block60" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 2718, 179 )
+scale = Vector2( 3.06107, 0.280012 )
+z_index = 2
+
+[node name="block209" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 8094, 178 )
+scale = Vector2( 3.06107, 0.280012 )
+z_index = 2
+
+[node name="block16" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( -219, 203 )
+z_index = 2
+
+[node name="block17" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 888, 366 )
+rotation = -0.278508
+z_index = 2
+
+[node name="block35" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 839, 377 )
+rotation = -0.0928267
+z_index = 2
+
+[node name="block31" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 940, 344 )
+rotation = -0.515073
+z_index = 2
+
+[node name="block34" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 992, 321 )
+rotation = -0.319342
+z_index = 2
+
+[node name="block42" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 1622, 319 )
+rotation = 0.178928
+z_index = 2
+
+[node name="block43" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 1673, 336 )
+rotation = 0.446674
+z_index = 2
+
+[node name="block45" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 1727, 361 )
+rotation = -1.18616
+z_index = 2
+
+[node name="block46" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 1784, 373 )
+rotation = 0.0902493
+z_index = 2
+
+[node name="loop_part11" parent="Level" instance=ExtResource( 27 )]
+position = Vector2( 7245, 580 )
+rotation = -1.46084
+scale = Vector2( 0.5, 0.5 )
+z_index = 2
+
+[node name="block146" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 7190, 627 )
+z_index = 2
+
+[node name="block147" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 6873, 566 )
+z_index = 2
+
+[node name="block148" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 6935, 566 )
+z_index = 2
+
+[node name="block149" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 6992, 571 )
+rotation = 0.178928
+z_index = 2
+
+[node name="block150" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 7043, 588 )
+rotation = 0.446674
+z_index = 2
+
+[node name="block151" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 7097, 613 )
+rotation = -1.18616
+z_index = 2
+
+[node name="block152" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 7154, 625 )
+rotation = 0.0902493
+z_index = 2
+
+[node name="block187" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 8901, 567 )
+z_index = 2
+
+[node name="block188" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 8963, 567 )
+z_index = 2
+
+[node name="block189" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 9020, 572 )
+rotation = 0.178928
+z_index = 2
+
+[node name="block190" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 9071, 589 )
+rotation = 0.446674
+z_index = 2
+
+[node name="block191" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 9125, 614 )
+rotation = -1.18616
+z_index = 2
+
+[node name="block192" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 9182, 630 )
+rotation = 0.146871
+z_index = 2
+
+[node name="block86" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 3849, 371 )
+z_index = 2
+
+[node name="block87" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 3651, 315 )
+rotation = 0.178928
+z_index = 2
+
+[node name="block88" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 3702, 332 )
+rotation = 0.446674
+z_index = 2
+
+[node name="block89" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 3756, 357 )
+rotation = -1.18616
+z_index = 2
+
+[node name="block90" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 3813, 369 )
+rotation = 0.0902493
+z_index = 2
+
+[node name="block18" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( -219, 79 )
+z_index = 2
+
+[node name="block10" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( -602, 386 )
+z_index = 2
+
+[node name="block12" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( -283, 389 )
+z_index = 2
+
+[node name="block95" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 4450, 313 )
+z_index = 2
+
+[node name="block96" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 4512, 313 )
+z_index = 2
+
+[node name="block97" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 4576, 313 )
+z_index = 2
+
+[node name="block98" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 4635, 313 )
+z_index = 2
+
+[node name="block100" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 4688, 313 )
+z_index = 2
+
+[node name="block101" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 4733, 284 )
+z_index = 2
+
+[node name="block102" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 4795, 250 )
+z_index = 2
+
+[node name="block103" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 4859, 249 )
+z_index = 2
+
+[node name="block104" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 4899, 249 )
+z_index = 2
+
+[node name="block105" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 4956, 204 )
+z_index = 2
+
+[node name="block114" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 4575, -13 )
+z_index = 2
+
+[node name="block115" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 4585, -13 )
+z_index = 2
+
+[node name="block116" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 4513, 26 )
+z_index = 2
+
+[node name="block117" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 4452, 58 )
+z_index = 2
+
+[node name="block118" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 4388, 58 )
+z_index = 2
+
+[node name="block119" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 4325, 58 )
+z_index = 2
+
+[node name="block120" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 4038, 61 )
+z_index = 2
+
+[node name="block123" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 4083, 61 )
+z_index = 2
+
+[node name="block121" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 3989, 70.9999 )
+rotation = -0.402115
+z_index = 2
+
+[node name="block122" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 3938, 85.9999 )
+rotation = -0.184893
+z_index = 2
+
+[node name="block210" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 8389, 317 )
+z_index = 2
+
+[node name="block211" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 8434, 317 )
+z_index = 2
+
+[node name="block212" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 8340, 327 )
+rotation = -0.402115
+z_index = 2
+
+[node name="block213" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 8289, 342 )
+rotation = -0.184893
+z_index = 2
+
+[node name="block106" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 5020, 204 )
+z_index = 2
+
+[node name="block107" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 5083, 204 )
+z_index = 2
+
+[node name="block108" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 5147, 204 )
+z_index = 2
+
+[node name="block109" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 5211, 204 )
+z_index = 2
+
+[node name="block110" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 5275, 250 )
+z_index = 2
+
+[node name="block111" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 5339, 250 )
+z_index = 2
+
+[node name="block112" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 5415, 250 )
+z_index = 2
+
+[node name="block113" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 5375, 250 )
+z_index = 2
+
+[node name="block99" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 4408, 313 )
+z_index = 2
+
+[node name="block72" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 6177, -199 )
+z_index = 2
+
+[node name="block76" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 6176, -138 )
+z_index = 2
+
+[node name="block77" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 6174, -92 )
+z_index = 2
+
+[node name="block78" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 6174, -35 )
+z_index = 2
+
+[node name="block79" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 6162, 56 )
+z_index = 2
+
+[node name="block127" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 6431, 312 )
+z_index = 2
+
+[node name="block218" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 6337, 315 )
+z_index = 2
+
+[node name="block219" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 6401, 314 )
+z_index = 2
+
+[node name="block128" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 6495, 312 )
+z_index = 2
+
+[node name="block129" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 6556, 312 )
+z_index = 2
+
+[node name="block130" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 6601, 312 )
+z_index = 2
+
+[node name="block131" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 6627, 312 )
+z_index = 2
+
+[node name="block80" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 6101, 56 )
+z_index = 2
+
+[node name="block81" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 6039, 56 )
+z_index = 2
+
+[node name="block124" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 5981, 56 )
+z_index = 2
+
+[node name="block125" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 5918, 56 )
+z_index = 2
+
+[node name="block126" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 5856, 56 )
+z_index = 2
+
+[node name="block73" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 6240, -199 )
+z_index = 2
+
+[node name="block74" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 6304, -199 )
+z_index = 2
+
+[node name="block75" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 6368, -200 )
+z_index = 2
+
+[node name="block132" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 6431, -199 )
+z_index = 2
+
+[node name="block133" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 6494, -197 )
+z_index = 2
+
+[node name="block134" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 6558, -197 )
+z_index = 2
+
+[node name="block135" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 6617, -198 )
+z_index = 2
+
+[node name="block136" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 6680, -199 )
+z_index = 2
+
+[node name="block153" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 7712, 632 )
+z_index = 2
+
+[node name="block203" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 7648, 569 )
+z_index = 2
+
+[node name="block154" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 7776, 632 )
+z_index = 2
+
+[node name="block155" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 7840, 631 )
+z_index = 2
+
+[node name="block156" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 7903, 632 )
+z_index = 2
+
+[node name="block157" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 7966, 634 )
+z_index = 2
+
+[node name="block204" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 7711, 249 )
+z_index = 2
+
+[node name="block205" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 7774, 202 )
+z_index = 2
+
+[node name="block206" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 7838, 201 )
+z_index = 2
+
+[node name="block207" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 7901, 202 )
+z_index = 2
+
+[node name="block208" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 7966, 200 )
+z_index = 2
+
+[node name="block158" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 8030, 634 )
+z_index = 2
+
+[node name="block197" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 7303, 568 )
+z_index = 2
+
+[node name="block198" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 7367, 568 )
+z_index = 2
+
+[node name="block199" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 7431, 567 )
+z_index = 2
+
+[node name="block200" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 7494, 568 )
+z_index = 2
+
+[node name="block201" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 7556, 568 )
+z_index = 2
+
+[node name="block202" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 7620, 568 )
+z_index = 2
+
+[node name="block159" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 8089, 633 )
+z_index = 2
+
+[node name="block160" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 8152, 632 )
+z_index = 2
+
+[node name="block161" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 8213, 631 )
+z_index = 2
+
+[node name="block162" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 8277, 631 )
+z_index = 2
+
+[node name="block163" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 8341, 630 )
+z_index = 2
+
+[node name="block164" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 8404, 631 )
+z_index = 2
+
+[node name="block165" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 8467, 633 )
+z_index = 2
+
+[node name="block166" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 8531, 633 )
+z_index = 2
+
+[node name="block171" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 9307, 637 )
+z_index = 2
+
+[node name="block172" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 9370, 636 )
+z_index = 2
+
+[node name="block193" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 9200, 637 )
+z_index = 2
+
+[node name="block214" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 8489, 318 )
+rotation = 0.178928
+z_index = 2
+
+[node name="block215" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 8540, 335 )
+rotation = 0.446674
+z_index = 2
+
+[node name="block216" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 8594, 360 )
+rotation = -1.18616
+z_index = 2
+
+[node name="block217" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 8651, 376 )
+rotation = 0.146871
+z_index = 2
+
+[node name="block194" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 9257, 638 )
+z_index = 2
+
+[node name="block173" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 9431, 635 )
+z_index = 2
+
+[node name="block174" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 9495, 635 )
+z_index = 2
+
+[node name="block175" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 9559, 634 )
+z_index = 2
+
+[node name="block176" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 9622, 635 )
+z_index = 2
+
+[node name="block177" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 9685, 637 )
+z_index = 2
+
+[node name="block178" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 9749, 637 )
+z_index = 2
+
+[node name="block179" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 9801, 637 )
+z_index = 2
+
+[node name="block180" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 9864, 636 )
+z_index = 2
+
+[node name="block181" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 9925, 635 )
+z_index = 2
+
+[node name="block182" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 9989, 635 )
+z_index = 2
+
+[node name="block183" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 10053, 634 )
+z_index = 2
+
+[node name="block184" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 10116, 635 )
+z_index = 2
+
+[node name="block185" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 10179, 637 )
+z_index = 2
+
+[node name="block186" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 10243, 637 )
+z_index = 2
+
+[node name="block167" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 8567, 603 )
+z_index = 2
+
+[node name="block168" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 8630, 602 )
+z_index = 2
+
+[node name="block169" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 8667, 569 )
+z_index = 2
+
+[node name="block170" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 8730, 568 )
+z_index = 2
+
+[node name="block195" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 8780, 568 )
+z_index = 2
+
+[node name="block196" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 8843, 567 )
+z_index = 2
+
+[node name="block137" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 6686, -296 )
+z_index = 2
+
+[node name="block138" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 6685, -358 )
+z_index = 2
+
+[node name="block139" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 6686, -416 )
+z_index = 2
+
+[node name="block140" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 6685, -453 )
+z_index = 2
+
+[node name="block141" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 6749, -453 )
+z_index = 2
+
+[node name="block142" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 6813, -453 )
+z_index = 2
+
+[node name="block143" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 6876, -452 )
+z_index = 2
+
+[node name="block144" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 6935, -453 )
+z_index = 2
+
+[node name="block145" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 6948, -453 )
+z_index = 2
+
+[node name="Node2D" parent="Level" instance=ExtResource( 31 )]
+position = Vector2( 324, 252 )
+
+[node name="Node2D4" parent="Level" instance=ExtResource( 31 )]
+position = Vector2( 820, 64 )
+
+[node name="Node2D5" parent="Level" instance=ExtResource( 31 )]
+position = Vector2( 820, 40 )
+
+[node name="Node2D6" parent="Level" instance=ExtResource( 31 )]
+position = Vector2( 820, 15 )
+
+[node name="Node2D7" parent="Level" instance=ExtResource( 31 )]
+position = Vector2( 820, -8 )
+
+[node name="Node2D8" parent="Level" instance=ExtResource( 31 )]
+position = Vector2( 820, -33 )
+
+[node name="Node2D2" parent="Level" instance=ExtResource( 31 )]
+position = Vector2( 348, 252 )
+
+[node name="Node2D3" parent="Level" instance=ExtResource( 31 )]
+position = Vector2( 372, 252 )
+
+[node name="Node2D9" parent="Level" instance=ExtResource( 31 )]
+position = Vector2( 1132, 188 )
+
+[node name="Node2D10" parent="Level" instance=ExtResource( 31 )]
+position = Vector2( 1156, 188 )
+
+[node name="Node2D11" parent="Level" instance=ExtResource( 31 )]
+position = Vector2( 1180, 188 )
+
+[node name="Node2D12" parent="Level" instance=ExtResource( 31 )]
+position = Vector2( 1204, 188 )
+
+[node name="Node2D13" parent="Level" instance=ExtResource( 31 )]
+position = Vector2( 1228, 188 )
+
+[node name="Node2D14" parent="Level" instance=ExtResource( 31 )]
+position = Vector2( 1666, 284 )
+
+[node name="Node2D15" parent="Level" instance=ExtResource( 31 )]
+position = Vector2( 1699, 299 )
+
+[node name="Node2D16" parent="Level" instance=ExtResource( 31 )]
+position = Vector2( 1730, 317 )
+
+[node name="Node2D17" parent="Level" instance=ExtResource( 31 )]
+position = Vector2( 1764, 328 )
+
+[node name="Node2D18" parent="Level" instance=ExtResource( 31 )]
+position = Vector2( 1803, 333 )
+
+[node name="Node2D19" parent="Level" instance=ExtResource( 31 )]
+position = Vector2( 1848, 331 )
+
+[node name="Node2D20" parent="Level" instance=ExtResource( 31 )]
+position = Vector2( 1885, 303 )
+
+[node name="Node2D21" parent="Level" instance=ExtResource( 31 )]
+position = Vector2( 2501, 91 )
+
+[node name="Node2D22" parent="Level" instance=ExtResource( 31 )]
+position = Vector2( 2526, 91 )
+
+[node name="Node2D23" parent="Level" instance=ExtResource( 31 )]
+position = Vector2( 2964, 107 )
+
+[node name="Node2D24" parent="Level" instance=ExtResource( 31 )]
+position = Vector2( 2988, 107 )
+
+[node name="Node2D25" parent="Level" instance=ExtResource( 31 )]
+position = Vector2( 3408, 77 )
+
+[node name="Node2D26" parent="Level" instance=ExtResource( 31 )]
+position = Vector2( 3440, 64 )
+
+[node name="Node2D27" parent="Level" instance=ExtResource( 31 )]
+position = Vector2( 3476, 47 )
+
+[node name="Node2D28" parent="Level" instance=ExtResource( 31 )]
+position = Vector2( 3508, 30 )
+
+[node name="Node2D29" parent="Level" instance=ExtResource( 31 )]
+position = Vector2( 3761, -84 )
+
+[node name="Node2D30" parent="Level" instance=ExtResource( 31 )]
+position = Vector2( 3794, -91 )
+
+[node name="Node2D31" parent="Level" instance=ExtResource( 31 )]
+position = Vector2( 3830, -98 )
+
+[node name="Node2D32" parent="Level" instance=ExtResource( 31 )]
+position = Vector2( 3867, -99 )
+
+[node name="Node2D33" parent="Level" instance=ExtResource( 31 )]
+position = Vector2( 3904, -98 )
+
+[node name="Node2D34" parent="Level" instance=ExtResource( 31 )]
+position = Vector2( 3942, -100 )
+
+[node name="Node2D35" parent="Level" instance=ExtResource( 31 )]
+position = Vector2( 4440, 199 )
+
+[node name="Node2D36" parent="Level" instance=ExtResource( 31 )]
+position = Vector2( 4465, 199 )
+
+[node name="Node2D37" parent="Level" instance=ExtResource( 31 )]
+position = Vector2( 4489, 199 )
+
+[node name="Node2D38" parent="Level" instance=ExtResource( 31 )]
+position = Vector2( 4639, 199 )
+
+[node name="Node2D39" parent="Level" instance=ExtResource( 31 )]
+position = Vector2( 4664, 199 )
+
+[node name="Node2D40" parent="Level" instance=ExtResource( 31 )]
+position = Vector2( 4689, 199 )
+
+[node name="Node2D41" parent="Level" instance=ExtResource( 31 )]
+position = Vector2( 4700, -40 )
+
+[node name="Node2D42" parent="Level" instance=ExtResource( 31 )]
+position = Vector2( 4737, -28 )
+
+[node name="Node2D43" parent="Level" instance=ExtResource( 31 )]
+position = Vector2( 4770, -12 )
+
+[node name="Node2D44" parent="Level" instance=ExtResource( 31 )]
+position = Vector2( 4803, 3 )
+
+[node name="Node2D45" parent="Level" instance=ExtResource( 31 )]
+position = Vector2( 4843, 11 )
+
+[node name="Node2D46" parent="Level" instance=ExtResource( 31 )]
+position = Vector2( 5436, -4 )
+
+[node name="Node2D47" parent="Level" instance=ExtResource( 31 )]
+position = Vector2( 5470, -40 )
+
+[node name="Node2D48" parent="Level" instance=ExtResource( 31 )]
+position = Vector2( 5507, -53 )
+
+[node name="Node2D49" parent="Level" instance=ExtResource( 31 )]
+position = Vector2( 5547, -38 )
+
+[node name="Node2D50" parent="Level" instance=ExtResource( 31 )]
+position = Vector2( 5572, -5 )
+
+[node name="cirecle" type="Node2D" parent="."]
+position = Vector2( -1001, 694 )
+scale = Vector2( 2, 2 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Node2D" type="Node2D" parent="cirecle"]
+position = Vector2( -32, -32 )
+scale = Vector2( 0.5, 0.5 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Sprite" type="Sprite" parent="cirecle/Node2D"]
+modulate = Color( 0, 0, 0, 1 )
+texture = ExtResource( 18 )
+region_enabled = true
+region_rect = Rect2( 640, 0, 128, 128 )
+
+[node name="StaticBody2D" type="StaticBody2D" parent="cirecle/Node2D"]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="cirecle/Node2D/StaticBody2D"]
+visible = false
+polygon = PoolVector2Array( -64, 64, -61, 38, -55, 16, -42, -8, -28, -25, -8, -42, 12, -53, 36, -61, 64, -64, 64, 64 )
+
+[node name="Node2D2" type="Node2D" parent="cirecle"]
+position = Vector2( 32, -32 )
+rotation = 1.5708
+scale = Vector2( 0.5, 0.5 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Sprite" type="Sprite" parent="cirecle/Node2D2"]
+modulate = Color( 0, 0, 0, 1 )
+texture = ExtResource( 18 )
+region_enabled = true
+region_rect = Rect2( 640, 0, 128, 128 )
+
+[node name="StaticBody2D" type="StaticBody2D" parent="cirecle/Node2D2"]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="cirecle/Node2D2/StaticBody2D"]
+visible = false
+polygon = PoolVector2Array( -64, 64, -61, 38, -55, 16, -42, -8, -28, -25, -8, -42, 12, -53, 36, -61, 64, -64, 64, 64 )
+
+[node name="Node2D3" type="Node2D" parent="cirecle"]
+position = Vector2( 32, 32 )
+rotation = -3.14159
+scale = Vector2( 0.5, 0.5 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Sprite" type="Sprite" parent="cirecle/Node2D3"]
+modulate = Color( 0, 0, 0, 1 )
+texture = ExtResource( 18 )
+region_enabled = true
+region_rect = Rect2( 640, 0, 128, 128 )
+
+[node name="StaticBody2D" type="StaticBody2D" parent="cirecle/Node2D3"]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="cirecle/Node2D3/StaticBody2D"]
+visible = false
+polygon = PoolVector2Array( -64, 64, -61, 38, -55, 16, -42, -8, -28, -25, -8, -42, 12, -53, 36, -61, 64, -64, 64, 64 )
+
+[node name="Node2D4" type="Node2D" parent="cirecle"]
+position = Vector2( -32, 32 )
+rotation = -1.5708
+scale = Vector2( 0.5, 0.5 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Sprite" type="Sprite" parent="cirecle/Node2D4"]
+modulate = Color( 0, 0, 0, 1 )
+texture = ExtResource( 18 )
+region_enabled = true
+region_rect = Rect2( 640, 0, 128, 128 )
+
+[node name="StaticBody2D" type="StaticBody2D" parent="cirecle/Node2D4"]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="cirecle/Node2D4/StaticBody2D"]
+visible = false
+polygon = PoolVector2Array( -64, 64, -61, 38, -55, 16, -42, -8, -28, -25, -8, -42, 12, -53, 36, -61, 64, -64, 64, 64 )
+
+[node name="cirecle2" type="Node2D" parent="."]
+position = Vector2( -444, 758 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Node2D" type="Node2D" parent="cirecle2"]
+position = Vector2( -32, -32 )
+scale = Vector2( 0.5, 0.5 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Sprite" type="Sprite" parent="cirecle2/Node2D"]
+modulate = Color( 0, 0, 0, 1 )
+texture = ExtResource( 18 )
+region_enabled = true
+region_rect = Rect2( 640, 0, 128, 128 )
+
+[node name="StaticBody2D" type="StaticBody2D" parent="cirecle2/Node2D"]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="cirecle2/Node2D/StaticBody2D"]
+visible = false
+polygon = PoolVector2Array( -64, 64, -61, 38, -55, 16, -42, -8, -28, -25, -8, -42, 12, -53, 36, -61, 64, -64, 64, 64 )
+
+[node name="Node2D2" type="Node2D" parent="cirecle2"]
+position = Vector2( 32, -32 )
+rotation = 1.5708
+scale = Vector2( 0.5, 0.5 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Sprite" type="Sprite" parent="cirecle2/Node2D2"]
+modulate = Color( 0, 0, 0, 1 )
+texture = ExtResource( 18 )
+region_enabled = true
+region_rect = Rect2( 640, 0, 128, 128 )
+
+[node name="StaticBody2D" type="StaticBody2D" parent="cirecle2/Node2D2"]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="cirecle2/Node2D2/StaticBody2D"]
+visible = false
+polygon = PoolVector2Array( -64, 64, -61, 38, -55, 16, -42, -8, -28, -25, -8, -42, 12, -53, 36, -61, 64, -64, 64, 64 )
+
+[node name="Node2D3" type="Node2D" parent="cirecle2"]
+position = Vector2( 32, 32 )
+rotation = -3.14159
+scale = Vector2( 0.5, 0.5 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Sprite" type="Sprite" parent="cirecle2/Node2D3"]
+modulate = Color( 0, 0, 0, 1 )
+texture = ExtResource( 18 )
+region_enabled = true
+region_rect = Rect2( 640, 0, 128, 128 )
+
+[node name="StaticBody2D" type="StaticBody2D" parent="cirecle2/Node2D3"]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="cirecle2/Node2D3/StaticBody2D"]
+visible = false
+polygon = PoolVector2Array( -64, 64, -61, 38, -55, 16, -42, -8, -28, -25, -8, -42, 12, -53, 36, -61, 64, -64, 64, 64 )
+
+[node name="Node2D4" type="Node2D" parent="cirecle2"]
+position = Vector2( -32, 32 )
+rotation = -1.5708
+scale = Vector2( 0.5, 0.5 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Sprite" type="Sprite" parent="cirecle2/Node2D4"]
+modulate = Color( 0, 0, 0, 1 )
+texture = ExtResource( 18 )
+region_enabled = true
+region_rect = Rect2( 640, 0, 128, 128 )
+
+[node name="StaticBody2D" type="StaticBody2D" parent="cirecle2/Node2D4"]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="cirecle2/Node2D4/StaticBody2D"]
+visible = false
+polygon = PoolVector2Array( -64, 64, -61, 38, -55, 16, -42, -8, -28, -25, -8, -42, 12, -53, 36, -61, 64, -64, 64, 64 )
+
+[node name="block" parent="." instance=ExtResource( 28 )]
+position = Vector2( 640, 928 )
+scale = Vector2( 2.98834, 1.92565 )
+
+[node name="block2" parent="." instance=ExtResource( 28 )]
+position = Vector2( 3353, 741 )
+
+[node name="block3" parent="." instance=ExtResource( 28 )]
+position = Vector2( 3419, 737 )
+rotation = -0.132051
+
+[node name="block4" parent="." instance=ExtResource( 28 )]
+position = Vector2( 3477, 718 )
+rotation = -0.432144
+
+[node name="block5" parent="." instance=ExtResource( 28 )]
+position = Vector2( 3534, 687 )
+rotation = -0.56111
+
+[node name="block6" parent="." instance=ExtResource( 28 )]
+position = Vector2( 3575, 675 )
+
+[node name="block7" parent="." instance=ExtResource( 28 )]
+position = Vector2( 3616, 675 )
+
+[node name="block8" parent="." instance=ExtResource( 28 )]
+position = Vector2( 4079, 994 )
+
+[node name="block9" parent="." instance=ExtResource( 28 )]
+position = Vector2( 4147, 987 )
+rotation = -0.132051
+
+[node name="block10" parent="." instance=ExtResource( 28 )]
+position = Vector2( 4209, 971 )
+rotation = -0.375363
+
+[node name="block11" parent="." instance=ExtResource( 28 )]
+position = Vector2( 4263, 944 )
+rotation = -0.56111
+
+[node name="block12" parent="." instance=ExtResource( 28 )]
+position = Vector2( 4306, 933 )
+
+[node name="block13" parent="." instance=ExtResource( 28 )]
+position = Vector2( 4345, 933 )
+
+[node name="block14" parent="." instance=ExtResource( 28 )]
+position = Vector2( 5382, 741 )
+
+[node name="block47" parent="." instance=ExtResource( 28 )]
+position = Vector2( 5446, 741 )
+
+[node name="block48" parent="." instance=ExtResource( 28 )]
+position = Vector2( 5510, 742 )
+
+[node name="block49" parent="." instance=ExtResource( 28 )]
+position = Vector2( 5572, 743 )
+
+[node name="block15" parent="." instance=ExtResource( 28 )]
+position = Vector2( 5319, 741 )
+
+[node name="block16" parent="." instance=ExtResource( 28 )]
+position = Vector2( 5258, 741 )
+
+[node name="block28" parent="." instance=ExtResource( 28 )]
+position = Vector2( 4000, 564 )
+
+[node name="block31" parent="." instance=ExtResource( 28 )]
+position = Vector2( 4832, 421 )
+
+[node name="block32" parent="." instance=ExtResource( 28 )]
+position = Vector2( 4896, 422 )
+
+[node name="block33" parent="." instance=ExtResource( 28 )]
+position = Vector2( 5407, 550 )
+
+[node name="block35" parent="." instance=ExtResource( 28 )]
+position = Vector2( 5471, 534 )
+scale = Vector2( 1, 0.5 )
+
+[node name="block36" parent="." instance=ExtResource( 28 )]
+position = Vector2( 5535, 534 )
+scale = Vector2( 1, 0.5 )
+
+[node name="block37" parent="." instance=ExtResource( 28 )]
+position = Vector2( 5585, 534 )
+scale = Vector2( 1, 0.5 )
+
+[node name="block77" parent="." instance=ExtResource( 28 )]
+position = Vector2( 5602, 550 )
+
+[node name="block29" parent="." instance=ExtResource( 28 )]
+position = Vector2( 3937, 565 )
+
+[node name="block30" parent="." instance=ExtResource( 28 )]
+position = Vector2( 3873, 564 )
+
+[node name="block17" parent="." instance=ExtResource( 28 )]
+position = Vector2( 5195, 741 )
+
+[node name="block60" parent="." instance=ExtResource( 28 )]
+position = Vector2( 7643, 933 )
+
+[node name="block61" parent="." instance=ExtResource( 28 )]
+position = Vector2( 7706, 933 )
+
+[node name="block64" parent="." instance=ExtResource( 28 )]
+position = Vector2( 7580, 933 )
+
+[node name="block65" parent="." instance=ExtResource( 28 )]
+position = Vector2( 7519, 933 )
+
+[node name="block66" parent="." instance=ExtResource( 28 )]
+position = Vector2( 7456, 933 )
+
+[node name="block72" parent="." instance=ExtResource( 28 )]
+position = Vector2( 8903, 999 )
+
+[node name="block73" parent="." instance=ExtResource( 28 )]
+position = Vector2( 8966, 999 )
+
+[node name="block74" parent="." instance=ExtResource( 28 )]
+position = Vector2( 8840, 999 )
+
+[node name="block75" parent="." instance=ExtResource( 28 )]
+position = Vector2( 8779, 999 )
+
+[node name="block76" parent="." instance=ExtResource( 28 )]
+position = Vector2( 8716, 999 )
+
+[node name="block62" parent="." instance=ExtResource( 28 )]
+position = Vector2( 8768, 902 )
+
+[node name="block63" parent="." instance=ExtResource( 28 )]
+position = Vector2( 8829, 902 )
+
+[node name="block70" parent="." instance=ExtResource( 28 )]
+position = Vector2( 8896, 901 )
+
+[node name="block71" parent="." instance=ExtResource( 28 )]
+position = Vector2( 8866, 901 )
+
+[node name="block67" parent="." instance=ExtResource( 28 )]
+position = Vector2( 8349, 819 )
+
+[node name="block68" parent="." instance=ExtResource( 28 )]
+position = Vector2( 8288, 819 )
+
+[node name="block69" parent="." instance=ExtResource( 28 )]
+position = Vector2( 8225, 819 )
+
+[node name="block18" parent="." instance=ExtResource( 28 )]
+position = Vector2( 5134, 741 )
+
+[node name="block19" parent="." instance=ExtResource( 28 )]
+position = Vector2( 5069, 735 )
+rotation = 0.176334
+
+[node name="block20" parent="." instance=ExtResource( 28 )]
+position = Vector2( 5008, 714 )
+rotation = 0.489569
+
+[node name="block21" parent="." instance=ExtResource( 28 )]
+position = Vector2( 4957, 691 )
+rotation = 0.366343
+
+[node name="block22" parent="." instance=ExtResource( 28 )]
+position = Vector2( 4907, 678 )
+rotation = 0.117175
+
+[node name="block24" parent="." instance=ExtResource( 28 )]
+position = Vector2( 4801, 668 )
+rotation = 0.176334
+
+[node name="block25" parent="." instance=ExtResource( 28 )]
+position = Vector2( 4740, 647 )
+rotation = 0.489569
+
+[node name="block26" parent="." instance=ExtResource( 28 )]
+position = Vector2( 4689, 624 )
+rotation = 0.366343
+
+[node name="block27" parent="." instance=ExtResource( 28 )]
+position = Vector2( 4639, 611 )
+rotation = 0.117175
+
+[node name="block23" parent="." instance=ExtResource( 28 )]
+position = Vector2( 4849, 675 )
+rotation = 0.0293122
+
+[node name="block34" parent="." instance=ExtResource( 28 )]
+position = Vector2( 5857, 487 )
+
+[node name="block38" parent="." instance=ExtResource( 28 )]
+position = Vector2( 5923, 483 )
+rotation = -0.132051
+
+[node name="block39" parent="." instance=ExtResource( 28 )]
+position = Vector2( 5981, 464 )
+rotation = -0.432144
+
+[node name="block40" parent="." instance=ExtResource( 28 )]
+position = Vector2( 6038, 433 )
+rotation = -0.56111
+
+[node name="block43" parent="." instance=ExtResource( 28 )]
+position = Vector2( 5636, 741 )
+rotation = -0.0638526
+
+[node name="block44" parent="." instance=ExtResource( 28 )]
+position = Vector2( 5701, 731 )
+rotation = -0.239474
+
+[node name="block45" parent="." instance=ExtResource( 28 )]
+position = Vector2( 5755, 713 )
+rotation = -0.432144
+
+[node name="block46" parent="." instance=ExtResource( 28 )]
+position = Vector2( 5809, 687 )
+rotation = -0.443178
+
+[node name="block41" parent="." instance=ExtResource( 28 )]
+position = Vector2( 6079, 421 )
+
+[node name="block42" parent="." instance=ExtResource( 28 )]
+position = Vector2( 6120, 421 )
+
+[node name="block50" parent="." instance=ExtResource( 28 )]
+position = Vector2( 6111, 164 )
+
+[node name="block51" parent="." instance=ExtResource( 28 )]
+position = Vector2( 6172, 164 )
+
+[node name="block52" parent="." instance=ExtResource( 28 )]
+position = Vector2( 6235, 164 )
+
+[node name="block53" parent="." instance=ExtResource( 28 )]
+position = Vector2( 6298, 164 )
+
+[node name="block54" parent="." instance=ExtResource( 28 )]
+position = Vector2( 6362, 165 )
+
+[node name="block55" parent="." instance=ExtResource( 28 )]
+position = Vector2( 6426, 165 )
+
+[node name="block56" parent="." instance=ExtResource( 28 )]
+position = Vector2( 6488, 165 )
+
+[node name="block57" parent="." instance=ExtResource( 28 )]
+position = Vector2( 6549, 165 )
+
+[node name="block58" parent="." instance=ExtResource( 28 )]
+position = Vector2( 6596, 165 )
+
+[node name="block59" parent="." instance=ExtResource( 28 )]
+position = Vector2( 6645, 165 )
+
+[node name="block78" parent="." instance=ExtResource( 30 )]
+position = Vector2( 4639, 499 )
+
+[node name="block96" parent="." instance=ExtResource( 30 )]
+position = Vector2( 4152, 681 )
+rotation = 0.198045
+scale = Vector2( 1.36833, 1.4122 )
+
+[node name="block97" parent="." instance=ExtResource( 30 )]
+position = Vector2( 4257, 681 )
+rotation = -0.302385
+scale = Vector2( 1.36833, 1.4122 )
+
+[node name="block98" parent="." instance=ExtResource( 30 )]
+position = Vector2( 3807, 567 )
+rotation = -0.302385
+scale = Vector2( 1.36833, 1.4122 )
+
+[node name="block79" parent="." instance=ExtResource( 30 )]
+position = Vector2( 4705, 438 )
+
+[node name="block80" parent="." instance=ExtResource( 30 )]
+position = Vector2( 5025, 403 )
+
+[node name="block81" parent="." instance=ExtResource( 30 )]
+position = Vector2( 5152, 438 )
+
+[node name="block82" parent="." instance=ExtResource( 30 )]
+position = Vector2( 5284, 468 )
+
+[node name="block83" parent="." instance=ExtResource( 30 )]
+position = Vector2( 5728, 498 )
+
+[node name="block84" parent="." instance=ExtResource( 30 )]
+position = Vector2( 5663, 364 )
+
+[node name="block85" parent="." instance=ExtResource( 30 )]
+position = Vector2( 5776, 237 )
+
+[node name="block86" parent="." instance=ExtResource( 30 )]
+position = Vector2( 5951, 172 )
+
+[node name="block87" parent="." instance=ExtResource( 30 )]
+position = Vector2( 7011, 151 )
+
+[node name="block88" parent="." instance=ExtResource( 30 )]
+position = Vector2( 7073, 214 )
+
+[node name="block89" parent="." instance=ExtResource( 30 )]
+position = Vector2( 7139, 277 )
+
+[node name="block90" parent="." instance=ExtResource( 30 )]
+position = Vector2( 7201, 341 )
+
+[node name="block91" parent="." instance=ExtResource( 30 )]
+position = Vector2( 7263, 405 )
+
+[node name="block92" parent="." instance=ExtResource( 30 )]
+position = Vector2( 7328, 470 )
+
+[node name="block93" parent="." instance=ExtResource( 30 )]
+position = Vector2( 7392, 534 )
+
+[node name="block94" parent="." instance=ExtResource( 30 )]
+position = Vector2( 7490, 534 )
+
+[node name="block95" parent="." instance=ExtResource( 30 )]
+position = Vector2( 7650, 528 )
+
+[connection signal="animation_finished" from="Player/Characters/Sonic/AnimationPlayer" to="Player/StateMachine" method="_on_AnimationPlayer_animation_finished"]
