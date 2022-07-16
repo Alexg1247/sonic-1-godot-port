@@ -16,6 +16,10 @@ func step(host, delta):
 	if !host.is_ray_colliding or host.fall_from_ground():
 		host.is_grounded = false
 		return 'OnAir'
+		
+	if kill:
+		kill = false
+		host.is_rolling = true
 	
 	if Input.is_action_pressed("ui_down"):
 		if abs(host.gsp) > 61.875:
@@ -160,3 +164,9 @@ func _on_animation_finished(anim_name):
 		idle_anim = 'Idle2'
 	elif anim_name == 'Idle2':
 		idle_anim = 'Idle3'
+
+var kill:bool = false
+
+func _on_Area2D_area_entered(area):
+	if area is PlayerPhysics:
+		kill = true

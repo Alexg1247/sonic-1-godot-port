@@ -1,4 +1,4 @@
-[gd_scene load_steps=50 format=2]
+[gd_scene load_steps=51 format=2]
 
 [ext_resource path="res://Gameplay Scripts/character_animator.gd" type="Script" id=1]
 [ext_resource path="res://Gameplay Scripts/States/on_ground.gd" type="Script" id=2]
@@ -273,6 +273,9 @@ radius = 9.0
 [sub_resource type="RayShape2D" id=17]
 length = 19.0
 
+[sub_resource type="RectangleShape2D" id=18]
+extents = Vector2( 10, 20 )
+
 [node name="GHZ" type="Node2D"]
 
 [node name="PlayerCamera" type="Node2D" parent="."]
@@ -522,8 +525,8 @@ scale = Vector2( 0.4, 0.4 )
 z_index = 2
 
 [node name="loop_part15" parent="Level" instance=ExtResource( 27 )]
-position = Vector2( 6222, 118 )
-rotation = -1.5708
+position = Vector2( 6219, 120 )
+rotation = -1.46259
 scale = Vector2( 0.4, 0.4 )
 z_index = 2
 
@@ -540,14 +543,20 @@ scale = Vector2( 0.4, 0.4 )
 z_index = 2
 
 [node name="loop_part17" parent="Level" instance=ExtResource( 27 )]
-position = Vector2( 6260, 175 )
-rotation = 1.028
+position = Vector2( 6281, 166 )
+rotation = 0.701622
+scale = Vector2( 0.4, 0.4 )
+z_index = 2
+
+[node name="loop_part20" parent="Level" instance=ExtResource( 27 )]
+position = Vector2( 6264, 175 )
+rotation = 1.1397
 scale = Vector2( 0.4, 0.4 )
 z_index = 2
 
 [node name="loop_part18" parent="Level" instance=ExtResource( 27 )]
-position = Vector2( 6282, 107 )
-rotation = -2.03156
+position = Vector2( 6288, 83 )
+rotation = -2.35969
 scale = Vector2( 0.4, 0.4 )
 z_index = 2
 
@@ -1543,6 +1552,12 @@ position = Vector2( 5547, -38 )
 [node name="Node2D50" parent="Level" instance=ExtResource( 31 )]
 position = Vector2( 5572, -5 )
 
+[node name="Area2D" type="Area2D" parent="Level"]
+position = Vector2( 6141, 10 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Level/Area2D"]
+shape = SubResource( 18 )
+
 [node name="cirecle" type="Node2D" parent="."]
 position = Vector2( -1001, 694 )
 scale = Vector2( 2, 2 )
@@ -2041,3 +2056,4 @@ position = Vector2( 7490, 534 )
 position = Vector2( 7650, 528 )
 
 [connection signal="animation_finished" from="Player/Characters/Sonic/AnimationPlayer" to="Player/StateMachine" method="_on_AnimationPlayer_animation_finished"]
+[connection signal="body_entered" from="Level/Area2D" to="Player/StateMachine/OnGround" method="_on_Area2D_area_entered"]
