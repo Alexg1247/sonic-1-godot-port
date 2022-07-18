@@ -1,4 +1,4 @@
-[gd_scene load_steps=51 format=2]
+[gd_scene load_steps=60 format=2]
 
 [ext_resource path="res://Gameplay Scripts/character_animator.gd" type="Script" id=1]
 [ext_resource path="res://Gameplay Scripts/States/on_ground.gd" type="Script" id=2]
@@ -17,7 +17,7 @@
 [ext_resource path="res://Audio/sfx/jump.wav" type="AudioStream" id=15]
 [ext_resource path="res://Gameplay Scripts/States/spin_dash.gd" type="Script" id=16]
 [ext_resource path="res://Audio/sfx/instaShield.wav" type="AudioStream" id=17]
-[ext_resource path="res://Sprites/prototype_tile.png" type="Texture" id=18]
+[ext_resource path="res://Levels/GHZ Tiles/ramp thngy.tscn" type="PackedScene" id=18]
 [ext_resource path="res://Gameplay Scripts/States/super_peel_out.gd" type="Script" id=19]
 [ext_resource path="res://Gameplay Scripts/character_vfx.gd" type="Script" id=20]
 [ext_resource path="res://Audio/sfx/peelOutRelease.wav" type="AudioStream" id=21]
@@ -32,6 +32,28 @@
 [ext_resource path="res://Test Zone/fall block.tscn" type="PackedScene" id=30]
 [ext_resource path="res://Ring.tscn" type="PackedScene" id=31]
 [ext_resource path="res://Audio/sfx/brake.wav" type="AudioStream" id=32]
+[ext_resource path="res://General/Sonic1_MD_Map_Ghz1.png" type="Texture" id=33]
+[ext_resource path="res://Levels/42174_74b2919481062bb5722ea3e724b7f7c0d57d1825.png" type="Texture" id=34]
+[ext_resource path="res://ring box.tscn" type="PackedScene" id=35]
+[ext_resource path="res://Spring.tscn" type="PackedScene" id=36]
+[ext_resource path="res://Levels/Unsaved Image 1.png" type="Texture" id=37]
+[ext_resource path="res://Levels/Genesis 32X SCD - Sonic the Hedgehog Prototype - Green Hill Zone Act 1 Normal.png" type="Texture" id=38]
+[ext_resource path="res://Levels/ParallaxBackground.gd" type="Script" id=39]
+
+[sub_resource type="Animation" id=19]
+resource_name = "Bounce"
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ 37 ]
+}
 
 [sub_resource type="Animation" id=1]
 resource_name = "Braking"
@@ -264,14 +286,17 @@ tracks/0/keys = {
 "values": [ 0, 1, 2, 3, 4, 5 ]
 }
 
+[sub_resource type="RectangleShape2D" id=20]
+extents = Vector2( 3.5, 8.9375 )
+
 [sub_resource type="CapsuleShape2D" id=15]
-height = 6.05999
+radius = 9.0
+height = 0.0
 
 [sub_resource type="CircleShape2D" id=16]
 radius = 9.0
 
 [sub_resource type="RayShape2D" id=17]
-length = 19.0
 
 [sub_resource type="RectangleShape2D" id=18]
 extents = Vector2( 10, 20 )
@@ -279,7 +304,7 @@ extents = Vector2( 10, 20 )
 [node name="GHZ" type="Node2D"]
 
 [node name="PlayerCamera" type="Node2D" parent="."]
-position = Vector2( 212, 740 )
+position = Vector2( 98, 847 )
 script = ExtResource( 5 )
 __meta__ = {
 "_edit_group_": true
@@ -288,10 +313,13 @@ __meta__ = {
 [node name="CameraScroll" type="Node2D" parent="PlayerCamera"]
 
 [node name="Camera2D" type="Camera2D" parent="PlayerCamera/CameraScroll"]
+offset = Vector2( 30, -50 )
 current = true
-zoom = Vector2( 0.5, 0.5 )
+zoom = Vector2( 0.45, 0.45 )
 limit_left = 0
 limit_top = 0
+smoothing_enabled = true
+smoothing_speed = 10.0
 drag_margin_left = 0.08
 drag_margin_top = 0.4
 drag_margin_right = 0.0
@@ -299,7 +327,7 @@ drag_margin_bottom = 0.15
 editor_draw_limits = true
 
 [node name="Player" type="KinematicBody2D" parent="."]
-position = Vector2( 31, 946 )
+position = Vector2( 75, 935 )
 z_index = 1
 collision/safe_margin = 0.1
 script = ExtResource( 4 )
@@ -332,6 +360,7 @@ vframes = 17
 region_rect = Rect2( 0, 0, 48, 48 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Player/Characters/Sonic"]
+anims/Bounce = SubResource( 19 )
 anims/Braking = SubResource( 1 )
 anims/Idle1 = SubResource( 2 )
 anims/Idle2 = SubResource( 3 )
@@ -403,6 +432,10 @@ volume_db = -10.0
 stream = ExtResource( 17 )
 volume_db = -25.0
 
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
+position = Vector2( -0.5, 3.0625 )
+shape = SubResource( 20 )
+
 [node name="HighCollider" type="CollisionShape2D" parent="Player"]
 position = Vector2( -1, -2.99997 )
 shape = SubResource( 15 )
@@ -412,15 +445,16 @@ position = Vector2( 0, 10 )
 shape = SubResource( 16 )
 
 [node name="RayShape" type="CollisionShape2D" parent="Player"]
+position = Vector2( 0, -1 )
 shape = SubResource( 17 )
 
 [node name="LeftGroundSensor" type="RayCast2D" parent="Player"]
-position = Vector2( -9, 7 )
+position = Vector2( -5, 9 )
 enabled = true
 cast_to = Vector2( 0, 36 )
 
 [node name="RightGroundSensor" type="RayCast2D" parent="Player"]
-position = Vector2( 7, 7 )
+position = Vector2( 4, 8 )
 enabled = true
 cast_to = Vector2( 0, 36 )
 
@@ -474,42 +508,15 @@ position = Vector2( 174, 32 )
 [node name="MaskSetterInvert" parent="Level/FullLoop" instance=ExtResource( 8 )]
 position = Vector2( 0, -95 )
 
-[node name="loop_part3" parent="Level" instance=ExtResource( 27 )]
-position = Vector2( -1753, 182 )
-z_index = 2
-
-[node name="loop_part4" parent="Level" instance=ExtResource( 27 )]
-position = Vector2( -1879, 15 )
-rotation = -3.14159
-z_index = 2
-
-[node name="loop_part6" parent="Level" instance=ExtResource( 27 )]
-position = Vector2( -1077, 478 )
-z_index = 2
-
-[node name="loop_part9" parent="Level" instance=ExtResource( 27 )]
-position = Vector2( -527, 501 )
-z_index = 2
-
-[node name="loop_part8" parent="Level" instance=ExtResource( 27 )]
-position = Vector2( -781, 314 )
-rotation = 1.5708
-z_index = 2
-
-[node name="loop_part5" parent="Level" instance=ExtResource( 27 )]
-position = Vector2( -1203, 311 )
-rotation = -3.14159
-z_index = 2
-
 [node name="loop_part10" parent="Level" instance=ExtResource( 27 )]
-position = Vector2( 1877, 328 )
-rotation = -1.46084
-scale = Vector2( 0.5, 0.5 )
+position = Vector2( 1866, 329 )
+rotation = -1.43641
+scale = Vector2( 0.6, 0.6 )
 z_index = 2
 
 [node name="loop_part12" parent="Level" instance=ExtResource( 27 )]
-position = Vector2( 6240, 259 )
-rotation = -0.0994838
+position = Vector2( 6254, 259 )
+rotation = -0.153589
 scale = Vector2( 0.8, 0.8 )
 z_index = 2
 
@@ -532,9 +539,9 @@ scale = Vector2( 0.4, 0.4 )
 z_index = 2
 
 [node name="loop_part16" parent="Level" instance=ExtResource( 27 )]
-position = Vector2( 6204, 167 )
-rotation = 1.15366
-scale = Vector2( 0.4, 0.4 )
+position = Vector2( 6217, 188 )
+rotation = 0.787143
+scale = Vector2( 0.7, 0.7 )
 z_index = 2
 
 [node name="loop_part19" parent="Level" instance=ExtResource( 27 )]
@@ -561,42 +568,18 @@ rotation = -2.35969
 scale = Vector2( 0.4, 0.4 )
 z_index = 2
 
-[node name="block" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( -1994, -38 )
-z_index = 2
-
-[node name="block8" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( -666, 262 )
-z_index = 2
-
-[node name="block11" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( -602, 324 )
-z_index = 2
-
-[node name="block14" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( -283, 327 )
-z_index = 2
-
-[node name="block9" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( -602, 262 )
-z_index = 2
-
 [node name="block15" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 285, 379 )
-scale = Vector2( 19.88, 1 )
+position = Vector2( 344, 382 )
+scale = Vector2( 14, 1 )
 z_index = 2
 
 [node name="block32" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 1054, 310 )
-scale = Vector2( 1.29343, 0.893631 )
-z_index = 2
-
-[node name="block44" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 1820, 375 )
+position = Vector2( 1068, 322 )
+scale = Vector2( 0.608635, 1.25535 )
 z_index = 2
 
 [node name="block49" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 2059, 310 )
+position = Vector2( 2054, 309 )
 scale = Vector2( 4.84001, 1 )
 z_index = 2
 
@@ -605,7 +588,7 @@ position = Vector2( 2208, 282 )
 z_index = 2
 
 [node name="block54" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 2303, 245 )
+position = Vector2( 2304, 250 )
 scale = Vector2( 2, 1 )
 z_index = 2
 
@@ -615,7 +598,7 @@ scale = Vector2( 4, 1 )
 z_index = 2
 
 [node name="block66" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 3102, 137 )
+position = Vector2( 3102, 138 )
 scale = Vector2( 1, 1.5 )
 z_index = 2
 
@@ -624,34 +607,28 @@ position = Vector2( 3229, 122 )
 scale = Vector2( 3, 1 )
 z_index = 2
 
-[node name="block91" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 3891, 371 )
-z_index = 2
-
-[node name="block92" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 3953, 371 )
-z_index = 2
-
-[node name="block93" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 4017, 371 )
-z_index = 2
-
 [node name="block94" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 4081, 371 )
+position = Vector2( 3999, 380 )
+scale = Vector2( 5.08, 1 )
+z_index = 2
+
+[node name="block95" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 4493, 313 )
+scale = Vector2( 5.08, 1 )
 z_index = 2
 
 [node name="block84" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 3468, 310 )
-scale = Vector2( 5, 1 )
+position = Vector2( 3470, 318 )
+scale = Vector2( 4.48, 1 )
 z_index = 2
 
 [node name="block58" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 2492, 201 )
+position = Vector2( 2496, 201 )
 scale = Vector2( 4, 1 )
 z_index = 2
 
 [node name="block39" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 1440, 314 )
+position = Vector2( 1435, 316 )
 scale = Vector2( 4.92, 1 )
 z_index = 2
 
@@ -670,86 +647,79 @@ position = Vector2( 8094, 178 )
 scale = Vector2( 3.06107, 0.280012 )
 z_index = 2
 
-[node name="block16" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( -219, 203 )
-z_index = 2
-
 [node name="block17" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 888, 366 )
-rotation = -0.278508
+position = Vector2( 865, 378 )
+rotation = -0.351177
 z_index = 2
 
 [node name="block35" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 839, 377 )
-rotation = -0.0928267
+position = Vector2( 815, 385 )
+rotation = 0.118669
 z_index = 2
 
 [node name="block31" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 940, 344 )
+position = Vector2( 915, 354 )
 rotation = -0.515073
 z_index = 2
 
 [node name="block34" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 992, 321 )
-rotation = -0.319342
+position = Vector2( 967, 329 )
+rotation = -0.354678
+z_index = 2
+
+[node name="block265" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 1020, 317 )
+rotation = -0.0815803
 z_index = 2
 
 [node name="block42" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 1622, 319 )
-rotation = 0.178928
+position = Vector2( 1614, 323 )
+rotation = 0.274396
 z_index = 2
 
 [node name="block43" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 1673, 336 )
+position = Vector2( 1668, 344 )
 rotation = 0.446674
 z_index = 2
 
 [node name="block45" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 1727, 361 )
-rotation = -1.18616
+position = Vector2( 1728, 368 )
+rotation = -1.30978
 z_index = 2
 
 [node name="block46" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 1784, 373 )
-rotation = 0.0902493
+position = Vector2( 1789, 377 )
+rotation = 0.0304543
 z_index = 2
 
 [node name="loop_part11" parent="Level" instance=ExtResource( 27 )]
-position = Vector2( 7245, 580 )
-rotation = -1.46084
-scale = Vector2( 0.5, 0.5 )
+position = Vector2( 7249, 593 )
+rotation = -1.5708
+scale = Vector2( 0.6, 0.6 )
 z_index = 2
 
 [node name="block146" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 7190, 627 )
-z_index = 2
-
-[node name="block147" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 6875, 574 )
-z_index = 2
-
-[node name="block148" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 6934, 574 )
+position = Vector2( 7296, 620 )
 z_index = 2
 
 [node name="block149" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 6992, 580 )
-rotation = 0.178928
+position = Vector2( 7111, 629 )
+rotation = 0.275762
 z_index = 2
 
 [node name="block150" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 7047, 595 )
+position = Vector2( 6997, 582 )
 rotation = 0.336849
 z_index = 2
 
 [node name="block151" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 7107, 614 )
-rotation = -1.31249
+position = Vector2( 7049, 606 )
+rotation = -1.09258
 z_index = 2
 
 [node name="block152" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 7163, 623 )
-rotation = 0.0902493
+position = Vector2( 7166, 643 )
+rotation = 0.207938
 z_index = 2
 
 [node name="block187" parent="Level" instance=ExtResource( 29 )]
@@ -780,57 +750,24 @@ position = Vector2( 9182, 630 )
 rotation = 0.146871
 z_index = 2
 
-[node name="block86" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 3881, 369 )
-rotation = 0.0349066
-z_index = 2
-
 [node name="block87" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 3655, 314 )
+position = Vector2( 3640, 322 )
 rotation = -3.0072
 z_index = 2
 
 [node name="block88" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 3707, 329 )
+position = Vector2( 3692, 337 )
 rotation = 0.42586
 z_index = 2
 
 [node name="block89" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 3766, 353 )
-rotation = -1.25838
+position = Vector2( 3750, 363 )
+rotation = -1.20282
 z_index = 2
 
 [node name="block90" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 3830, 365 )
+position = Vector2( 3810, 377 )
 rotation = 0.0902493
-z_index = 2
-
-[node name="block18" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( -219, 79 )
-z_index = 2
-
-[node name="block10" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( -602, 386 )
-z_index = 2
-
-[node name="block12" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( -283, 389 )
-z_index = 2
-
-[node name="block95" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 4450, 313 )
-z_index = 2
-
-[node name="block96" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 4512, 313 )
-z_index = 2
-
-[node name="block97" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 4576, 313 )
-z_index = 2
-
-[node name="block98" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 4635, 313 )
 z_index = 2
 
 [node name="block100" parent="Level" instance=ExtResource( 29 )]
@@ -841,16 +778,9 @@ z_index = 2
 position = Vector2( 4733, 284 )
 z_index = 2
 
-[node name="block102" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 4795, 250 )
-z_index = 2
-
-[node name="block103" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 4859, 249 )
-z_index = 2
-
 [node name="block104" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 4899, 249 )
+position = Vector2( 4852, 244 )
+scale = Vector2( 2.72, 1 )
 z_index = 2
 
 [node name="block105" parent="Level" instance=ExtResource( 29 )]
@@ -858,31 +788,36 @@ position = Vector2( 4956, 204 )
 z_index = 2
 
 [node name="block114" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 4575, -13 )
+position = Vector2( 4580, -13 )
 z_index = 2
 
 [node name="block116" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 4513, 26 )
+position = Vector2( 4516, 26 )
 z_index = 2
 
 [node name="block117" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 4387, 58 )
+position = Vector2( 4389, 57 )
 scale = Vector2( 3, 1 )
 z_index = 2
 
 [node name="block120" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 4046, 59 )
+position = Vector2( 4067, 58 )
 scale = Vector2( 2, 1 )
 z_index = 2
 
 [node name="block121" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 3965, 69 )
+position = Vector2( 3994, 68 )
+rotation = -0.402115
+z_index = 2
+
+[node name="block266" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 3956, 84 )
 rotation = -0.402115
 z_index = 2
 
 [node name="block122" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 3915, 86.0001 )
-rotation = -0.187697
+position = Vector2( 3931, 90 )
+rotation = 0.041269
 z_index = 2
 
 [node name="block210" parent="Level" instance=ExtResource( 29 )]
@@ -935,10 +870,6 @@ z_index = 2
 position = Vector2( 5375, 250 )
 z_index = 2
 
-[node name="block99" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 4408, 313 )
-z_index = 2
-
 [node name="block72" parent="Level" instance=ExtResource( 29 )]
 position = Vector2( 6177, -199 )
 z_index = 2
@@ -967,10 +898,6 @@ z_index = 2
 position = Vector2( 6527, 315 )
 z_index = 2
 
-[node name="block129" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 6588, 315 )
-z_index = 2
-
 [node name="block218" parent="Level" instance=ExtResource( 29 )]
 position = Vector2( 6337, 315 )
 z_index = 2
@@ -991,80 +918,340 @@ z_index = 2
 position = Vector2( 6101, 56 )
 z_index = 2
 
+[node name="block2" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 640, 314 )
+scale = Vector2( 2.98834, 1.92565 )
+
+[node name="block3" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 3352, 127 )
+rotation = 0.143738
+
+[node name="block4" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 3424, 124 )
+rotation = -0.220943
+
+[node name="block5" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 3490, 96 )
+rotation = -0.574519
+
+[node name="block6" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 3542, 66.9999 )
+rotation = -0.448653
+
+[node name="block7" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 3589, 57 )
+
+[node name="block13" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 3615, 58 )
+
+[node name="block19" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 4147, 375 )
+rotation = -0.132051
+
+[node name="block20" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 4204, 356 )
+rotation = -0.433249
+
+[node name="block21" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 4263, 324 )
+rotation = -0.56111
+
+[node name="block22" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 4305, 312 )
+
+[node name="block23" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 4345, 313 )
+
+[node name="block24" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 5382, 121 )
+
+[node name="block47" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 5446, 121 )
+
+[node name="block48" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 5510, 122 )
+
+[node name="block50" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 5572, 123 )
+
+[node name="block25" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 5319, 121 )
+
+[node name="block26" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 5258, 121 )
+
+[node name="block28" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 3990, -53 )
+
+[node name="block33" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 4857, -199 )
+scale = Vector2( 2, 1 )
+
+[node name="block37" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 5407, -70 )
+
+[node name="block38" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 5471, -86 )
+scale = Vector2( 1, 0.5 )
+
+[node name="block40" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 5535, -86 )
+scale = Vector2( 1, 0.5 )
+
+[node name="block41" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 5585, -86 )
+scale = Vector2( 1, 0.5 )
+
+[node name="block82" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 5602, -70 )
+
+[node name="block29" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 3927, -53 )
+
+[node name="block30" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 3863, -53 )
+
+[node name="block27" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 5195, 121 )
+
+[node name="block61" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 7643, 313 )
+
+[node name="block62" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 7706, 313 )
+
+[node name="block64" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 7580, 313 )
+
+[node name="block65" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 7519, 313 )
+
+[node name="block67" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 7456, 313 )
+
+[node name="block83" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 8966, 379 )
+
+[node name="block85" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 8903, 379 )
+
+[node name="block91" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 8840, 379 )
+
+[node name="block92" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 8779, 379 )
+
+[node name="block93" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 8716, 379 )
+
+[node name="block68" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 8768, 282 )
+
+[node name="block69" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 8829, 282 )
+
+[node name="block71" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 8896, 281 )
+
+[node name="block96" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 8866, 281 )
+
+[node name="block97" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 8349, 199 )
+
+[node name="block98" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 8288, 199 )
+
+[node name="block99" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 8225, 199 )
+
+[node name="block51" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 5134, 121 )
+
+[node name="block53" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 5069, 115 )
+rotation = 0.176334
+
+[node name="block55" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 5008, 94 )
+rotation = 0.489569
+
+[node name="block56" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 4957, 71 )
+rotation = 0.366343
+
+[node name="block57" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 4907, 58 )
+rotation = 0.117175
+
+[node name="block59" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 4801, 48 )
+rotation = 0.176334
+
+[node name="block102" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 4740, 27 )
+rotation = 0.489569
+
+[node name="block103" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 4689, 4 )
+rotation = 0.366343
+
+[node name="block115" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 4639, -9 )
+rotation = 0.117175
+
+[node name="block118" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 4849, 55 )
+rotation = 0.0293122
+
+[node name="block119" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 5857, -133 )
+
+[node name="block123" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 5923, -137 )
+rotation = -0.132051
+
+[node name="block130" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 5981, -156 )
+rotation = -0.432144
+
+[node name="block131" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 6038, -187 )
+rotation = -0.56111
+
+[node name="block228" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 5636, 121 )
+rotation = -0.0638526
+
+[node name="block229" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 5701, 111 )
+rotation = -0.239474
+
+[node name="block230" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 5755, 93 )
+rotation = -0.432144
+
+[node name="block231" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 5809, 67 )
+rotation = -0.443178
+
+[node name="block232" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 6079, -199 )
+
+[node name="block233" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 6120, -199 )
+
+[node name="block234" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 6111, -456 )
+
+[node name="block235" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 6172, -456 )
+
+[node name="block236" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 6235, -456 )
+
+[node name="block237" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 6298, -456 )
+
+[node name="block238" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 6362, -455 )
+
+[node name="block239" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 6426, -455 )
+
+[node name="block240" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 6488, -455 )
+
+[node name="block241" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 6549, -455 )
+
+[node name="block242" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 6596, -455 )
+
+[node name="block243" parent="Level" instance=ExtResource( 28 )]
+position = Vector2( 6645, -455 )
+
+[node name="block244" parent="Level" instance=ExtResource( 30 )]
+position = Vector2( 4639, -121 )
+
+[node name="block245" parent="Level" instance=ExtResource( 30 )]
+position = Vector2( 4147, 57.0001 )
+rotation = 0.198045
+scale = Vector2( 1.36833, 1.4122 )
+
+[node name="block246" parent="Level" instance=ExtResource( 30 )]
+position = Vector2( 4255, 58.9999 )
+rotation = -0.302385
+scale = Vector2( 1.36833, 1.4122 )
+
+[node name="block247" parent="Level" instance=ExtResource( 30 )]
+position = Vector2( 3793, -55 )
+rotation = -0.170803
+scale = Vector2( 1.36833, 1.4122 )
+
+[node name="block248" parent="Level" instance=ExtResource( 30 )]
+position = Vector2( 4705, -182 )
+
+[node name="block249" parent="Level" instance=ExtResource( 30 )]
+position = Vector2( 5025, -217 )
+
+[node name="block250" parent="Level" instance=ExtResource( 30 )]
+position = Vector2( 5152, -182 )
+
+[node name="block251" parent="Level" instance=ExtResource( 30 )]
+position = Vector2( 5284, -152 )
+
+[node name="block252" parent="Level" instance=ExtResource( 30 )]
+position = Vector2( 5728, -122 )
+
+[node name="block253" parent="Level" instance=ExtResource( 30 )]
+position = Vector2( 5663, -256 )
+
+[node name="block254" parent="Level" instance=ExtResource( 30 )]
+position = Vector2( 5776, -383 )
+
+[node name="block255" parent="Level" instance=ExtResource( 30 )]
+position = Vector2( 5951, -448 )
+
+[node name="block256" parent="Level" instance=ExtResource( 30 )]
+position = Vector2( 7011, -469 )
+
+[node name="block257" parent="Level" instance=ExtResource( 30 )]
+position = Vector2( 7073, -406 )
+
+[node name="block258" parent="Level" instance=ExtResource( 30 )]
+position = Vector2( 7139, -343 )
+
+[node name="block259" parent="Level" instance=ExtResource( 30 )]
+position = Vector2( 7201, -279 )
+
+[node name="block260" parent="Level" instance=ExtResource( 30 )]
+position = Vector2( 7263, -215 )
+
+[node name="block261" parent="Level" instance=ExtResource( 30 )]
+position = Vector2( 7328, -150 )
+
+[node name="block262" parent="Level" instance=ExtResource( 30 )]
+position = Vector2( 7392, -86 )
+
+[node name="block263" parent="Level" instance=ExtResource( 30 )]
+position = Vector2( 7490, -86 )
+
+[node name="block264" parent="Level" instance=ExtResource( 30 )]
+position = Vector2( 7650, -92 )
+
 [node name="block81" parent="Level" instance=ExtResource( 29 )]
 position = Vector2( 6039, 56 )
 z_index = 2
 
-[node name="loop_part20" parent="Level" instance=ExtResource( 27 )]
-position = Vector2( 6726, 518 )
-rotation = -0.0994838
-scale = Vector2( 0.8, 0.8 )
-z_index = 2
-
-[node name="loop_part21" parent="Level" instance=ExtResource( 27 )]
-position = Vector2( 6740, 292 )
-rotation = 3.14159
-scale = Vector2( 0.8, 0.8 )
-z_index = 2
-
-[node name="loop_part22" parent="Level" instance=ExtResource( 27 )]
-position = Vector2( 6709, 321 )
-rotation = 3.14159
-scale = Vector2( 0.4, 0.4 )
-z_index = 2
-
-[node name="loop_part23" parent="Level" instance=ExtResource( 27 )]
-position = Vector2( 6717, 376 )
-rotation = -1.5708
-scale = Vector2( 0.3, 0.3 )
-z_index = 2
-
-[node name="loop_part24" parent="Level" instance=ExtResource( 27 )]
-position = Vector2( 6690, 426 )
-rotation = 1.15366
-scale = Vector2( 0.4, 0.4 )
-z_index = 2
-
-[node name="loop_part25" parent="Level" instance=ExtResource( 27 )]
-position = Vector2( 6766, 390 )
-rotation = -1.8134
-scale = Vector2( 0.35, 0.35 )
-z_index = 2
-
-[node name="loop_part26" parent="Level" instance=ExtResource( 27 )]
-position = Vector2( 6777, 483 )
+[node name="loop_part28" parent="Level" instance=ExtResource( 27 )]
+position = Vector2( 6290, 227 )
 rotation = -0.502655
 scale = Vector2( 0.4, 0.4 )
 z_index = 2
 
-[node name="loop_part27" parent="Level" instance=ExtResource( 27 )]
-position = Vector2( 6741, 446 )
-rotation = 0.809833
-scale = Vector2( 0.3, 0.3 )
-z_index = 2
-
 [node name="block222" parent="Level" instance=ExtResource( 29 )]
 position = Vector2( 6660, 167 )
-z_index = 2
-
-[node name="block223" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 6660, 224 )
-z_index = 2
-
-[node name="block224" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 6648, 315 )
-z_index = 2
-
-[node name="block225" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 6823, 574 )
-z_index = 2
-
-[node name="block226" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 6822, 472 )
-z_index = 2
-
-[node name="block227" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 6822, 410 )
 z_index = 2
 
 [node name="block124" parent="Level" instance=ExtResource( 29 )]
@@ -1112,27 +1299,28 @@ position = Vector2( 6680, -199 )
 z_index = 2
 
 [node name="block153" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 7712, 632 )
+position = Vector2( 7712, 633 )
 z_index = 2
 
 [node name="block203" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 7648, 569 )
+position = Vector2( 7653, 575 )
+scale = Vector2( 1, 1.22805 )
 z_index = 2
 
 [node name="block154" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 7776, 632 )
+position = Vector2( 7776, 633 )
 z_index = 2
 
 [node name="block155" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 7840, 631 )
+position = Vector2( 7839, 633 )
 z_index = 2
 
 [node name="block156" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 7903, 632 )
+position = Vector2( 7903, 633 )
 z_index = 2
 
 [node name="block157" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 7966, 634 )
+position = Vector2( 7966, 633 )
 z_index = 2
 
 [node name="block204" parent="Level" instance=ExtResource( 29 )]
@@ -1160,59 +1348,59 @@ position = Vector2( 8030, 634 )
 z_index = 2
 
 [node name="block197" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 7304, 572 )
+position = Vector2( 7308, 568 )
 z_index = 2
 
 [node name="block198" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 7367, 572 )
+position = Vector2( 7370, 568 )
 z_index = 2
 
 [node name="block199" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 7431, 567 )
+position = Vector2( 7434, 568 )
 z_index = 2
 
 [node name="block200" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 7494, 568 )
+position = Vector2( 7498, 568 )
 z_index = 2
 
 [node name="block201" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 7556, 568 )
+position = Vector2( 7562, 568 )
 z_index = 2
 
 [node name="block202" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 7620, 568 )
+position = Vector2( 7626, 568 )
 z_index = 2
 
 [node name="block159" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 8089, 633 )
+position = Vector2( 8094, 634 )
 z_index = 2
 
 [node name="block160" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 8152, 632 )
+position = Vector2( 8158, 634 )
 z_index = 2
 
 [node name="block161" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 8213, 631 )
+position = Vector2( 8222, 634 )
 z_index = 2
 
 [node name="block162" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 8277, 631 )
+position = Vector2( 8286, 634 )
 z_index = 2
 
 [node name="block163" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 8341, 630 )
+position = Vector2( 8350, 634 )
 z_index = 2
 
 [node name="block164" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 8404, 631 )
+position = Vector2( 8414, 634 )
 z_index = 2
 
 [node name="block165" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 8467, 633 )
+position = Vector2( 8478, 634 )
 z_index = 2
 
 [node name="block166" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 8531, 633 )
+position = Vector2( 8542, 634 )
 z_index = 2
 
 [node name="block171" parent="Level" instance=ExtResource( 29 )]
@@ -1220,7 +1408,7 @@ position = Vector2( 9307, 637 )
 z_index = 2
 
 [node name="block172" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 9370, 636 )
+position = Vector2( 9371, 637 )
 z_index = 2
 
 [node name="block193" parent="Level" instance=ExtResource( 29 )]
@@ -1252,19 +1440,19 @@ position = Vector2( 9257, 638 )
 z_index = 2
 
 [node name="block173" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 9431, 635 )
+position = Vector2( 9435, 637 )
 z_index = 2
 
 [node name="block174" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 9495, 635 )
+position = Vector2( 9498, 637 )
 z_index = 2
 
 [node name="block175" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 9559, 634 )
+position = Vector2( 9562, 637 )
 z_index = 2
 
 [node name="block176" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 9622, 635 )
+position = Vector2( 9626, 637 )
 z_index = 2
 
 [node name="block177" parent="Level" instance=ExtResource( 29 )]
@@ -1308,7 +1496,7 @@ position = Vector2( 10243, 637 )
 z_index = 2
 
 [node name="block167" parent="Level" instance=ExtResource( 29 )]
-position = Vector2( 8567, 603 )
+position = Vector2( 8576, 603 )
 z_index = 2
 
 [node name="block168" parent="Level" instance=ExtResource( 29 )]
@@ -1367,663 +1555,434 @@ z_index = 2
 position = Vector2( 6948, -453 )
 z_index = 2
 
-[node name="Node2D" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 324, 252 )
-
-[node name="Node2D4" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 820, 64 )
-
-[node name="Node2D5" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 820, 40 )
-
-[node name="Node2D6" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 820, 15 )
-
-[node name="Node2D7" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 820, -8 )
-
-[node name="Node2D8" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 820, -33 )
-
-[node name="Node2D2" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 348, 252 )
-
-[node name="Node2D3" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 372, 252 )
-
-[node name="Node2D9" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 1132, 188 )
-
-[node name="Node2D10" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 1156, 188 )
-
-[node name="Node2D11" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 1180, 188 )
-
-[node name="Node2D12" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 1204, 188 )
-
-[node name="Node2D13" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 1228, 188 )
-
-[node name="Node2D14" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 1666, 284 )
-
-[node name="Node2D15" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 1699, 299 )
-
-[node name="Node2D16" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 1730, 317 )
-
-[node name="Node2D17" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 1764, 328 )
-
-[node name="Node2D18" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 1803, 333 )
-
-[node name="Node2D19" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 1848, 331 )
-
-[node name="Node2D20" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 1885, 303 )
-
-[node name="Node2D21" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 2501, 91 )
-
-[node name="Node2D22" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 2526, 91 )
-
-[node name="Node2D23" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 2964, 107 )
-
-[node name="Node2D24" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 2988, 107 )
-
-[node name="Node2D25" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 3408, 77 )
-
-[node name="Node2D26" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 3440, 64 )
-
-[node name="Node2D27" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 3476, 47 )
-
-[node name="Node2D28" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 3508, 30 )
-
-[node name="Node2D29" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 3761, -84 )
-
-[node name="Node2D30" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 3794, -91 )
-
-[node name="Node2D31" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 3830, -98 )
-
-[node name="Node2D32" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 3867, -99 )
-
-[node name="Node2D33" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 3904, -98 )
-
-[node name="Node2D34" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 3942, -100 )
-
-[node name="Node2D35" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 4440, 199 )
-
-[node name="Node2D36" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 4465, 199 )
-
-[node name="Node2D37" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 4489, 199 )
-
-[node name="Node2D51" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 7511, 4 )
-
-[node name="Node2D52" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 7536, 4 )
-
-[node name="Node2D53" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 7560, 4 )
-
-[node name="Node2D54" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 7584, 4 )
-
-[node name="Node2D55" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 7609, 4 )
-
-[node name="Node2D56" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 7633, 4 )
-
-[node name="Node2D57" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 7655, 4 )
-
-[node name="Node2D59" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 7523, -12 )
-
-[node name="Node2D60" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 7548, -12 )
-
-[node name="Node2D61" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 7572, -12 )
-
-[node name="Node2D62" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 7596, -12 )
-
-[node name="Node2D63" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 7621, -12 )
-
-[node name="Node2D64" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 7645, -12 )
-
-[node name="Node2D66" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 7536, -28 )
-
-[node name="Node2D67" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 7561, -28 )
-
-[node name="Node2D68" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 7585, -28 )
-
-[node name="Node2D69" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 7609, -28 )
-
-[node name="Node2D70" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 7634, -28 )
-
-[node name="Node2D72" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 7547, -44 )
-
-[node name="Node2D73" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 7572, -44 )
-
-[node name="Node2D74" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 7596, -44 )
-
-[node name="Node2D75" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 7620, -44 )
-
-[node name="Node2D77" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 7559, -60 )
-
-[node name="Node2D78" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 7584, -60 )
-
-[node name="Node2D79" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 7608, -60 )
-
-[node name="Node2D80" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 7632, -60 )
-
-[node name="Node2D76" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 7645, -44 )
-
-[node name="Node2D71" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 7658, -28 )
-
-[node name="Node2D65" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 7667, -12 )
-
-[node name="Node2D58" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 7679, 4 )
-
-[node name="Node2D38" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 4639, 199 )
-
-[node name="Node2D39" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 4664, 199 )
-
-[node name="Node2D40" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 4689, 199 )
-
-[node name="Node2D41" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 4700, -40 )
-
-[node name="Node2D42" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 4737, -28 )
-
-[node name="Node2D43" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 4770, -12 )
-
-[node name="Node2D44" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 4803, 3 )
-
-[node name="Node2D45" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 4843, 11 )
-
-[node name="Node2D46" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 5436, -4 )
-
-[node name="Node2D47" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 5470, -40 )
-
-[node name="Node2D48" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 5507, -53 )
-
-[node name="Node2D49" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 5547, -38 )
-
-[node name="Node2D50" parent="Level" instance=ExtResource( 31 )]
-position = Vector2( 5572, -5 )
-
 [node name="Area2D" type="Area2D" parent="Level"]
 position = Vector2( 6141, 10 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Level/Area2D"]
 shape = SubResource( 18 )
 
-[node name="cirecle" type="Node2D" parent="."]
-position = Vector2( -1001, 694 )
-scale = Vector2( 2, 2 )
-__meta__ = {
-"_edit_group_": true
-}
+[node name="loop_part21" parent="Level" instance=ExtResource( 27 )]
+position = Vector2( 6769, 518 )
+rotation = -0.153589
+scale = Vector2( 0.8, 0.8 )
+z_index = 2
 
-[node name="Node2D" type="Node2D" parent="cirecle"]
-position = Vector2( -32, -32 )
-scale = Vector2( 0.5, 0.5 )
-__meta__ = {
-"_edit_group_": true
-}
+[node name="loop_part22" parent="Level" instance=ExtResource( 27 )]
+position = Vector2( 6769, 292 )
+rotation = 3.14159
+scale = Vector2( 0.8, 0.8 )
+z_index = 2
 
-[node name="Sprite" type="Sprite" parent="cirecle/Node2D"]
-modulate = Color( 0, 0, 0, 1 )
-texture = ExtResource( 18 )
-region_enabled = true
-region_rect = Rect2( 640, 0, 128, 128 )
+[node name="loop_part23" parent="Level" instance=ExtResource( 27 )]
+position = Vector2( 6738, 321 )
+rotation = 3.14159
+scale = Vector2( 0.4, 0.4 )
+z_index = 2
 
-[node name="StaticBody2D" type="StaticBody2D" parent="cirecle/Node2D"]
+[node name="loop_part24" parent="Level" instance=ExtResource( 27 )]
+position = Vector2( 6730, 377 )
+rotation = -1.46259
+scale = Vector2( 0.4, 0.4 )
+z_index = 2
 
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="cirecle/Node2D/StaticBody2D"]
+[node name="loop_part25" parent="Level" instance=ExtResource( 27 )]
+position = Vector2( 6732, 447 )
+rotation = 0.787143
+scale = Vector2( 0.7, 0.7 )
+z_index = 2
+
+[node name="loop_part26" parent="Level" instance=ExtResource( 27 )]
+position = Vector2( 6797, 387 )
+rotation = -1.8134
+scale = Vector2( 0.3, 0.3 )
+z_index = 2
+
+[node name="loop_part29" parent="Level" instance=ExtResource( 27 )]
+position = Vector2( 6780, 434 )
+rotation = 1.1397
+scale = Vector2( 0.4, 0.4 )
+z_index = 2
+
+[node name="loop_part30" parent="Level" instance=ExtResource( 27 )]
+position = Vector2( 6801, 372 )
+rotation = -2.02807
+scale = Vector2( 0.4, 0.4 )
+z_index = 2
+
+[node name="block86" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 6689, 167 )
+z_index = 2
+
+[node name="block129" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 6689, 224 )
+z_index = 2
+
+[node name="block147" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 6677, 315 )
+z_index = 2
+
+[node name="block223" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 6852, 574 )
+z_index = 2
+
+[node name="block227" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 6916, 574 )
+z_index = 2
+
+[node name="block267" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 6945, 574 )
+z_index = 2
+
+[node name="block224" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 6851, 472 )
+z_index = 2
+
+[node name="block225" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 6851, 410 )
+z_index = 2
+
+[node name="block148" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 6616, 315 )
+z_index = 2
+
+[node name="block226" parent="Level" instance=ExtResource( 29 )]
+position = Vector2( 6554, 315 )
+z_index = 2
+
+[node name="loop_part31" parent="Level" instance=ExtResource( 27 )]
+position = Vector2( 6807, 486 )
+rotation = -0.502655
+scale = Vector2( 0.4, 0.4 )
+z_index = 2
+
+[node name="Area2D2" type="Area2D" parent="Level"]
+position = Vector2( 6656, 269 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Level/Area2D2"]
+shape = SubResource( 18 )
+
+[node name="RINGS" type="Node2D" parent="Level"]
+
+[node name="Node2D" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 324, 252 )
+
+[node name="Node2D4" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 820, 64 )
+
+[node name="Node2D5" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 820, 40 )
+
+[node name="Node2D6" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 820, 15 )
+
+[node name="Node2D7" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 820, -8 )
+
+[node name="Node2D8" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 820, -33 )
+
+[node name="Node2D2" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 348, 252 )
+
+[node name="Node2D3" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 372, 252 )
+
+[node name="Node2D9" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 1132, 188 )
+
+[node name="Node2D10" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 1156, 188 )
+
+[node name="Node2D11" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 1180, 188 )
+
+[node name="Node2D12" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 1204, 188 )
+
+[node name="Node2D13" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 1228, 188 )
+
+[node name="Node2D14" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 1665, 291 )
+
+[node name="Node2D15" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 1696, 306 )
+
+[node name="Node2D16" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 1727, 322 )
+
+[node name="Node2D17" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 1764, 332 )
+
+[node name="Node2D18" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 1803, 335 )
+
+[node name="Node2D19" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 1848, 331 )
+
+[node name="Node2D20" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 1884, 302 )
+
+[node name="Node2D21" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 2501, 91 )
+
+[node name="Node2D22" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 2526, 91 )
+
+[node name="Node2D23" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 2964, 107 )
+
+[node name="Node2D24" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 2988, 107 )
+
+[node name="Node2D25" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 3408, 82 )
+
+[node name="Node2D26" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 3440, 69 )
+
+[node name="Node2D27" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 3474, 51 )
+
+[node name="Node2D28" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 3508, 35 )
+
+[node name="Node2D81" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 3547, 18 )
+
+[node name="Node2D29" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 3761, -84 )
+
+[node name="Node2D30" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 3794, -91 )
+
+[node name="Node2D31" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 3830, -98 )
+
+[node name="Node2D32" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 3866, -95 )
+
+[node name="Node2D33" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 3903, -92 )
+
+[node name="Node2D34" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 3943, -93 )
+
+[node name="Node2D82" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 3976, 116 )
+
+[node name="Node2D83" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 4000, 116 )
+
+[node name="Node2D84" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 4025, 116 )
+
+[node name="Node2D35" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 4440, 199 )
+
+[node name="Node2D36" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 4465, 199 )
+
+[node name="Node2D37" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 4489, 199 )
+
+[node name="Node2D51" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 7511, 4 )
+
+[node name="Node2D52" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 7536, 4 )
+
+[node name="Node2D53" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 7560, 4 )
+
+[node name="Node2D54" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 7584, 4 )
+
+[node name="Node2D55" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 7609, 4 )
+
+[node name="Node2D56" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 7633, 4 )
+
+[node name="Node2D57" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 7655, 4 )
+
+[node name="Node2D59" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 7523, -12 )
+
+[node name="Node2D60" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 7548, -12 )
+
+[node name="Node2D61" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 7572, -12 )
+
+[node name="Node2D62" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 7596, -12 )
+
+[node name="Node2D63" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 7621, -12 )
+
+[node name="Node2D64" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 7645, -12 )
+
+[node name="Node2D66" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 7536, -28 )
+
+[node name="Node2D67" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 7561, -28 )
+
+[node name="Node2D68" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 7585, -28 )
+
+[node name="Node2D69" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 7609, -28 )
+
+[node name="Node2D70" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 7634, -28 )
+
+[node name="Node2D72" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 7547, -44 )
+
+[node name="Node2D73" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 7572, -44 )
+
+[node name="Node2D74" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 7596, -44 )
+
+[node name="Node2D75" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 7620, -44 )
+
+[node name="Node2D77" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 7559, -60 )
+
+[node name="Node2D78" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 7584, -60 )
+
+[node name="Node2D79" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 7608, -60 )
+
+[node name="Node2D80" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 7632, -60 )
+
+[node name="Node2D76" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 7645, -44 )
+
+[node name="Node2D71" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 7658, -28 )
+
+[node name="Node2D65" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 7667, -12 )
+
+[node name="Node2D58" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 7679, 4 )
+
+[node name="Node2D38" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 4639, 199 )
+
+[node name="Node2D39" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 4664, 199 )
+
+[node name="Node2D40" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 4689, 199 )
+
+[node name="Node2D41" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 4700, -40 )
+
+[node name="Node2D42" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 4737, -28 )
+
+[node name="Node2D43" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 4770, -12 )
+
+[node name="Node2D44" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 4803, 3 )
+
+[node name="Node2D45" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 4843, 11 )
+
+[node name="Node2D46" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 5436, -4 )
+
+[node name="Node2D47" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 5470, -40 )
+
+[node name="Node2D48" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 5507, -53 )
+
+[node name="Node2D49" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 5547, -38 )
+
+[node name="Node2D50" parent="Level/RINGS" instance=ExtResource( 31 )]
+position = Vector2( 5572, -5 )
+
+[node name="4217474B2919481062Bb5722Ea3E724B7F7C0D57D1825" type="Sprite" parent="."]
 visible = false
-polygon = PoolVector2Array( -64, 64, -61, 38, -55, 16, -42, -8, -28, -25, -8, -42, 12, -53, 36, -61, 64, -64, 64, 64 )
-
-[node name="Node2D2" type="Node2D" parent="cirecle"]
-position = Vector2( 32, -32 )
-rotation = 1.5708
-scale = Vector2( 0.5, 0.5 )
+modulate = Color( 1, 1, 1, 0.423529 )
+position = Vector2( 161, 888 )
+texture = ExtResource( 34 )
 __meta__ = {
-"_edit_group_": true
+"_edit_lock_": true
 }
 
-[node name="Sprite" type="Sprite" parent="cirecle/Node2D2"]
-modulate = Color( 0, 0, 0, 1 )
-texture = ExtResource( 18 )
-region_enabled = true
-region_rect = Rect2( 640, 0, 128, 128 )
-
-[node name="StaticBody2D" type="StaticBody2D" parent="cirecle/Node2D2"]
-
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="cirecle/Node2D2/StaticBody2D"]
+[node name="Sonic1MdMapGhz1" type="Sprite" parent="."]
+process_priority = -1
 visible = false
-polygon = PoolVector2Array( -64, 64, -61, 38, -55, 16, -42, -8, -28, -25, -8, -42, 12, -53, 36, -61, 64, -64, 64, 64 )
-
-[node name="Node2D3" type="Node2D" parent="cirecle"]
-position = Vector2( 32, 32 )
-rotation = -3.14159
-scale = Vector2( 0.5, 0.5 )
+light_mask = 2
+position = Vector2( 5120, 648 )
+z_index = -4
+texture = ExtResource( 33 )
 __meta__ = {
-"_edit_group_": true
+"_edit_lock_": true
 }
 
-[node name="Sprite" type="Sprite" parent="cirecle/Node2D3"]
-modulate = Color( 0, 0, 0, 1 )
-texture = ExtResource( 18 )
-region_enabled = true
-region_rect = Rect2( 640, 0, 128, 128 )
+[node name="Node2D" parent="." instance=ExtResource( 35 )]
+position = Vector2( 585, 859 )
 
-[node name="StaticBody2D" type="StaticBody2D" parent="cirecle/Node2D3"]
+[node name="Node2D7" parent="." instance=ExtResource( 35 )]
+position = Vector2( 2071, 883 )
+icon = 1
 
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="cirecle/Node2D3/StaticBody2D"]
+[node name="Node2D8" parent="." instance=ExtResource( 35 )]
+position = Vector2( 2283, 824 )
+icon = 2
+
+[node name="Node2D2" parent="." instance=ExtResource( 36 )]
+position = Vector2( 820, 825 )
+
+[node name="Node2D3" parent="." instance=ExtResource( 36 )]
+position = Vector2( 3628, 648 )
+
+[node name="Node2D5" parent="." instance=ExtResource( 36 )]
+position = Vector2( 3968, 969 )
+
+[node name="Node2D4" parent="." instance=ExtResource( 36 )]
+position = Vector2( 3503, 908 )
+
+[node name="CanvasLayer2" type="CanvasLayer" parent="."]
+
+[node name="ParallaxBackground" type="ParallaxBackground" parent="CanvasLayer2"]
+script = ExtResource( 39 )
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="CanvasLayer2/ParallaxBackground"]
 visible = false
-polygon = PoolVector2Array( -64, 64, -61, 38, -55, 16, -42, -8, -28, -25, -8, -42, 12, -53, 36, -61, 64, -64, 64, 64 )
+motion_scale = Vector2( 0.4, 1 )
 
-[node name="Node2D4" type="Node2D" parent="cirecle"]
-position = Vector2( -32, 32 )
-rotation = -1.5708
-scale = Vector2( 0.5, 0.5 )
-__meta__ = {
-"_edit_group_": true
-}
+[node name="UnsavedImage1" type="Sprite" parent="CanvasLayer2/ParallaxBackground/ParallaxLayer"]
+position = Vector2( 1635, 963 )
+texture = ExtResource( 37 )
 
-[node name="Sprite" type="Sprite" parent="cirecle/Node2D4"]
-modulate = Color( 0, 0, 0, 1 )
-texture = ExtResource( 18 )
-region_enabled = true
-region_rect = Rect2( 640, 0, 128, 128 )
-
-[node name="StaticBody2D" type="StaticBody2D" parent="cirecle/Node2D4"]
-
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="cirecle/Node2D4/StaticBody2D"]
+[node name="ParallaxLayer2" type="ParallaxLayer" parent="CanvasLayer2/ParallaxBackground"]
 visible = false
-polygon = PoolVector2Array( -64, 64, -61, 38, -55, 16, -42, -8, -28, -25, -8, -42, 12, -53, 36, -61, 64, -64, 64, 64 )
-
-[node name="block" parent="." instance=ExtResource( 28 )]
-position = Vector2( 640, 928 )
-scale = Vector2( 2.98834, 1.92565 )
-
-[node name="block2" parent="." instance=ExtResource( 28 )]
-position = Vector2( 3353, 741 )
-
-[node name="block3" parent="." instance=ExtResource( 28 )]
-position = Vector2( 3419, 737 )
-rotation = -0.132051
-
-[node name="block4" parent="." instance=ExtResource( 28 )]
-position = Vector2( 3477, 718 )
-rotation = -0.432144
-
-[node name="block5" parent="." instance=ExtResource( 28 )]
-position = Vector2( 3534, 687 )
-rotation = -0.56111
-
-[node name="block6" parent="." instance=ExtResource( 28 )]
-position = Vector2( 3575, 675 )
-
-[node name="block7" parent="." instance=ExtResource( 28 )]
-position = Vector2( 3616, 675 )
-
-[node name="block8" parent="." instance=ExtResource( 28 )]
-position = Vector2( 4079, 994 )
-
-[node name="block9" parent="." instance=ExtResource( 28 )]
-position = Vector2( 4147, 987 )
-rotation = -0.132051
-
-[node name="block10" parent="." instance=ExtResource( 28 )]
-position = Vector2( 4209, 971 )
-rotation = -0.375363
-
-[node name="block11" parent="." instance=ExtResource( 28 )]
-position = Vector2( 4263, 944 )
-rotation = -0.56111
-
-[node name="block12" parent="." instance=ExtResource( 28 )]
-position = Vector2( 4306, 933 )
-
-[node name="block13" parent="." instance=ExtResource( 28 )]
-position = Vector2( 4345, 933 )
-
-[node name="block14" parent="." instance=ExtResource( 28 )]
-position = Vector2( 5382, 741 )
-
-[node name="block47" parent="." instance=ExtResource( 28 )]
-position = Vector2( 5446, 741 )
-
-[node name="block48" parent="." instance=ExtResource( 28 )]
-position = Vector2( 5510, 742 )
-
-[node name="block49" parent="." instance=ExtResource( 28 )]
-position = Vector2( 5572, 743 )
-
-[node name="block15" parent="." instance=ExtResource( 28 )]
-position = Vector2( 5319, 741 )
-
-[node name="block16" parent="." instance=ExtResource( 28 )]
-position = Vector2( 5258, 741 )
-
-[node name="block28" parent="." instance=ExtResource( 28 )]
-position = Vector2( 4000, 564 )
-
-[node name="block31" parent="." instance=ExtResource( 28 )]
-position = Vector2( 4832, 421 )
-
-[node name="block32" parent="." instance=ExtResource( 28 )]
-position = Vector2( 4896, 422 )
-
-[node name="block33" parent="." instance=ExtResource( 28 )]
-position = Vector2( 5407, 550 )
-
-[node name="block35" parent="." instance=ExtResource( 28 )]
-position = Vector2( 5471, 534 )
-scale = Vector2( 1, 0.5 )
-
-[node name="block36" parent="." instance=ExtResource( 28 )]
-position = Vector2( 5535, 534 )
-scale = Vector2( 1, 0.5 )
-
-[node name="block37" parent="." instance=ExtResource( 28 )]
-position = Vector2( 5585, 534 )
-scale = Vector2( 1, 0.5 )
-
-[node name="block77" parent="." instance=ExtResource( 28 )]
-position = Vector2( 5602, 550 )
-
-[node name="block29" parent="." instance=ExtResource( 28 )]
-position = Vector2( 3937, 565 )
-
-[node name="block30" parent="." instance=ExtResource( 28 )]
-position = Vector2( 3873, 564 )
-
-[node name="block17" parent="." instance=ExtResource( 28 )]
-position = Vector2( 5195, 741 )
-
-[node name="block60" parent="." instance=ExtResource( 28 )]
-position = Vector2( 7643, 933 )
-
-[node name="block61" parent="." instance=ExtResource( 28 )]
-position = Vector2( 7706, 933 )
-
-[node name="block64" parent="." instance=ExtResource( 28 )]
-position = Vector2( 7580, 933 )
-
-[node name="block65" parent="." instance=ExtResource( 28 )]
-position = Vector2( 7519, 933 )
-
-[node name="block66" parent="." instance=ExtResource( 28 )]
-position = Vector2( 7456, 933 )
-
-[node name="block72" parent="." instance=ExtResource( 28 )]
-position = Vector2( 8903, 999 )
-
-[node name="block73" parent="." instance=ExtResource( 28 )]
-position = Vector2( 8966, 999 )
-
-[node name="block74" parent="." instance=ExtResource( 28 )]
-position = Vector2( 8840, 999 )
-
-[node name="block75" parent="." instance=ExtResource( 28 )]
-position = Vector2( 8779, 999 )
-
-[node name="block76" parent="." instance=ExtResource( 28 )]
-position = Vector2( 8716, 999 )
-
-[node name="block62" parent="." instance=ExtResource( 28 )]
-position = Vector2( 8768, 902 )
-
-[node name="block63" parent="." instance=ExtResource( 28 )]
-position = Vector2( 8829, 902 )
-
-[node name="block70" parent="." instance=ExtResource( 28 )]
-position = Vector2( 8896, 901 )
-
-[node name="block71" parent="." instance=ExtResource( 28 )]
-position = Vector2( 8866, 901 )
-
-[node name="block67" parent="." instance=ExtResource( 28 )]
-position = Vector2( 8349, 819 )
-
-[node name="block68" parent="." instance=ExtResource( 28 )]
-position = Vector2( 8288, 819 )
-
-[node name="block69" parent="." instance=ExtResource( 28 )]
-position = Vector2( 8225, 819 )
-
-[node name="block18" parent="." instance=ExtResource( 28 )]
-position = Vector2( 5134, 741 )
-
-[node name="block19" parent="." instance=ExtResource( 28 )]
-position = Vector2( 5069, 735 )
-rotation = 0.176334
-
-[node name="block20" parent="." instance=ExtResource( 28 )]
-position = Vector2( 5008, 714 )
-rotation = 0.489569
-
-[node name="block21" parent="." instance=ExtResource( 28 )]
-position = Vector2( 4957, 691 )
-rotation = 0.366343
-
-[node name="block22" parent="." instance=ExtResource( 28 )]
-position = Vector2( 4907, 678 )
-rotation = 0.117175
-
-[node name="block24" parent="." instance=ExtResource( 28 )]
-position = Vector2( 4801, 668 )
-rotation = 0.176334
-
-[node name="block25" parent="." instance=ExtResource( 28 )]
-position = Vector2( 4740, 647 )
-rotation = 0.489569
-
-[node name="block26" parent="." instance=ExtResource( 28 )]
-position = Vector2( 4689, 624 )
-rotation = 0.366343
-
-[node name="block27" parent="." instance=ExtResource( 28 )]
-position = Vector2( 4639, 611 )
-rotation = 0.117175
-
-[node name="block23" parent="." instance=ExtResource( 28 )]
-position = Vector2( 4849, 675 )
-rotation = 0.0293122
-
-[node name="block34" parent="." instance=ExtResource( 28 )]
-position = Vector2( 5857, 487 )
-
-[node name="block38" parent="." instance=ExtResource( 28 )]
-position = Vector2( 5923, 483 )
-rotation = -0.132051
-
-[node name="block39" parent="." instance=ExtResource( 28 )]
-position = Vector2( 5981, 464 )
-rotation = -0.432144
-
-[node name="block40" parent="." instance=ExtResource( 28 )]
-position = Vector2( 6038, 433 )
-rotation = -0.56111
-
-[node name="block43" parent="." instance=ExtResource( 28 )]
-position = Vector2( 5636, 741 )
-rotation = -0.0638526
-
-[node name="block44" parent="." instance=ExtResource( 28 )]
-position = Vector2( 5701, 731 )
-rotation = -0.239474
-
-[node name="block45" parent="." instance=ExtResource( 28 )]
-position = Vector2( 5755, 713 )
-rotation = -0.432144
-
-[node name="block46" parent="." instance=ExtResource( 28 )]
-position = Vector2( 5809, 687 )
-rotation = -0.443178
-
-[node name="block41" parent="." instance=ExtResource( 28 )]
-position = Vector2( 6079, 421 )
-
-[node name="block42" parent="." instance=ExtResource( 28 )]
-position = Vector2( 6120, 421 )
-
-[node name="block50" parent="." instance=ExtResource( 28 )]
-position = Vector2( 6111, 164 )
-
-[node name="block51" parent="." instance=ExtResource( 28 )]
-position = Vector2( 6172, 164 )
-
-[node name="block52" parent="." instance=ExtResource( 28 )]
-position = Vector2( 6235, 164 )
-
-[node name="block53" parent="." instance=ExtResource( 28 )]
-position = Vector2( 6298, 164 )
-
-[node name="block54" parent="." instance=ExtResource( 28 )]
-position = Vector2( 6362, 165 )
-
-[node name="block55" parent="." instance=ExtResource( 28 )]
-position = Vector2( 6426, 165 )
-
-[node name="block56" parent="." instance=ExtResource( 28 )]
-position = Vector2( 6488, 165 )
-
-[node name="block57" parent="." instance=ExtResource( 28 )]
-position = Vector2( 6549, 165 )
-
-[node name="block58" parent="." instance=ExtResource( 28 )]
-position = Vector2( 6596, 165 )
-
-[node name="block59" parent="." instance=ExtResource( 28 )]
-position = Vector2( 6645, 165 )
-
-[node name="block78" parent="." instance=ExtResource( 30 )]
-position = Vector2( 4639, 499 )
-
-[node name="block96" parent="." instance=ExtResource( 30 )]
-position = Vector2( 4148, 678 )
-rotation = 0.198045
-scale = Vector2( 1.36833, 1.4122 )
-
-[node name="block97" parent="." instance=ExtResource( 30 )]
-position = Vector2( 4257, 681 )
-rotation = -0.302385
-scale = Vector2( 1.36833, 1.4122 )
-
-[node name="block98" parent="." instance=ExtResource( 30 )]
-position = Vector2( 3807, 567 )
-rotation = -0.302385
-scale = Vector2( 1.36833, 1.4122 )
-
-[node name="block79" parent="." instance=ExtResource( 30 )]
-position = Vector2( 4705, 438 )
-
-[node name="block80" parent="." instance=ExtResource( 30 )]
-position = Vector2( 5025, 403 )
-
-[node name="block81" parent="." instance=ExtResource( 30 )]
-position = Vector2( 5152, 438 )
-
-[node name="block82" parent="." instance=ExtResource( 30 )]
-position = Vector2( 5284, 468 )
-
-[node name="block83" parent="." instance=ExtResource( 30 )]
-position = Vector2( 5728, 498 )
-
-[node name="block84" parent="." instance=ExtResource( 30 )]
-position = Vector2( 5663, 364 )
-
-[node name="block85" parent="." instance=ExtResource( 30 )]
-position = Vector2( 5776, 237 )
-
-[node name="block86" parent="." instance=ExtResource( 30 )]
-position = Vector2( 5951, 172 )
-
-[node name="block87" parent="." instance=ExtResource( 30 )]
-position = Vector2( 7011, 151 )
-
-[node name="block88" parent="." instance=ExtResource( 30 )]
-position = Vector2( 7073, 214 )
-
-[node name="block89" parent="." instance=ExtResource( 30 )]
-position = Vector2( 7139, 277 )
-
-[node name="block90" parent="." instance=ExtResource( 30 )]
-position = Vector2( 7201, 341 )
-
-[node name="block91" parent="." instance=ExtResource( 30 )]
-position = Vector2( 7263, 405 )
-
-[node name="block92" parent="." instance=ExtResource( 30 )]
-position = Vector2( 7328, 470 )
-
-[node name="block93" parent="." instance=ExtResource( 30 )]
-position = Vector2( 7392, 534 )
-
-[node name="block94" parent="." instance=ExtResource( 30 )]
-position = Vector2( 7490, 534 )
-
-[node name="block95" parent="." instance=ExtResource( 30 )]
-position = Vector2( 7650, 528 )
+position = Vector2( 1, 1 )
+motion_scale = Vector2( 0.5, 1 )
+
+[node name="Genesis32xScd-SonicTheHedgehogPrototype-GreenHillZoneAct1Normal" type="Sprite" parent="CanvasLayer2/ParallaxBackground/ParallaxLayer2"]
+position = Vector2( 1633, 805 )
+texture = ExtResource( 38 )
+
+[node name="Node2D6" parent="." instance=ExtResource( 18 )]
+position = Vector2( 276, 799 )
 
 [connection signal="animation_finished" from="Player/Characters/Sonic/AnimationPlayer" to="Player/StateMachine" method="_on_AnimationPlayer_animation_finished"]
 [connection signal="body_entered" from="Level/Area2D" to="Player/StateMachine/OnGround" method="_on_Area2D_area_entered"]
+[connection signal="body_entered" from="Level/Area2D2" to="Player/StateMachine/OnGround" method="_on_Area2D_area_entered"]

@@ -106,7 +106,7 @@ func fall_from_ground():
 
 func snap_to_ground():
 	rotation_degrees = -rad2deg(ground_angle())
-	velocity += -ground_normal * 150
+	velocity += -ground_normal * 200
 
 func ground_reacquisition():
 	var angle = abs(rad2deg(ground_angle()))

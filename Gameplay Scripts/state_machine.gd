@@ -7,12 +7,13 @@ onready var states = {
 	'SuperPeelOut' : $SuperPeelOut,
 }
 
-onready var host = get_parent()
+onready var host = $"../"
 
 var current_state = 'OnGround'
 var previous_state = null
 
 func _physics_process(delta):
+	print(host)
 	host.physics_step()
 	
 	var state_name = states[current_state].step(host, delta)

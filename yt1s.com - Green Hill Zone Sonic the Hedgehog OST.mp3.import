@@ -1,0 +1,15 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+path="res://.import/yt1s.com - Green Hill Zone Sonic the Hedgehog OST.mp3-f932ee32631b892e11e0b10a5c7bf5c1.mp3str"
+
+[deps]
+
+source_file="res://yt1s.com - Green Hill Zone Sonic the Hedgehog OST.mp3"
+dest_files=[ "res://.import/yt1s.com - Green Hill Zone Sonic the Hedgehog OST.mp3-f932ee32631b892e11e0b10a5c7bf5c1.mp3str" ]
+
+[params]
+
+loop=true
+loop_offset=0
