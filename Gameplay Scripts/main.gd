@@ -1,16 +1,7 @@
 extends Node
 
-var levelToLoad = preload("res://Levels/GHZ.tscn").instance()
-
 var levelnumb = ScoreCount.level
 
-var GHZ = preload("res://Levels/GHZ.tscn").instance()
-var testingLevel = preload("res://Levels/a!.tscn").instance()
-
-var levelList:Array = [
-	GHZ,
-	testingLevel
-]
 onready var theNumbers:Array = [
 	$CanvasLayer/Num1/AnimatedSprite,
 	$CanvasLayer/Num2/AnimatedSprite,
@@ -25,19 +16,12 @@ onready var life:Array = [
 func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
 	
-	match(levelnumb):
-		0:
-			add_child(levelToLoad)
-		1:
-			var levelToLoad = preload("res://Levels/a!.tscn").instance()
-			add_child(levelToLoad)
-		
+	add_child(Global.loadedLevel)
 
 func _process(delta):
 	if Input.is_action_just_pressed("ui_full_screen"):
 		OS.window_fullscreen = !OS.window_fullscreen
 		
-
 	var ringString:String = str(ScoreCount.rings)
 	if len(ringString) == 1:
 		ringString = "00"+ringString

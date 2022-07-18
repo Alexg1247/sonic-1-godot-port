@@ -13,7 +13,6 @@ var current_state = 'OnGround'
 var previous_state = null
 
 func _physics_process(delta):
-	print(host)
 	host.physics_step()
 	
 	var state_name = states[current_state].step(host, delta)

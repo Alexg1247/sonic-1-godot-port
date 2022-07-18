@@ -46,6 +46,7 @@ config/icon="res://icon.png"
 [autoload]
 
 ScoreCount="*res://ScoreCount.gd"
+Global="*res://Autoload/Scripts/Global.gd"
 
 [display]
 
